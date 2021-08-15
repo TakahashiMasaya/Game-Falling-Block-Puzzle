@@ -1,5 +1,5 @@
 {
-  "name": "game-block-down",
+  "name": "game-falling-block-pazzle",
   "version": "1.0.0",
   "description": "break blocks!",
   "main": "index.js",
