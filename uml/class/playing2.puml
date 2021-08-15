@@ -1,0 +1,117 @@
+@startuml
+
+namespace Application {
+  namespace Scene {
+    class SceneChanger{
+      - scene: SceneStart | ScenePlaying | SceneGameover | null
+      + next(): void
+    }
+    interface SceneInterface {
+      + start(): void
+      + move(): void
+      + pause(): void
+      + next(): void
+    }
+
+    SceneChanger --> SceneInterface
+    SceneInterface <|-- SceneStart
+    SceneInterface <|-- ScenePlaying
+    SceneInterface <|-- SceneGameover
+    class SceneStart{}
+  }
+
+  namespace Interactor {
+    class InteractiveManager {}
+    interface InteractorInterface {}
+    InteractorInterface <--- InteractiveManager
+    InteractorInterface <|-- InvokeToScene
+    InteractorInterface <|-- StatusManager
+  }
+}
+
+namespace Domain {
+  namespace Parts {
+    interface ScoreInterface {
+      - score: number
+      + add(number): void
+    }
+    class Score {
+
+    }
+    ScoreInterface <|-- Score
+
+    interface FieldInterface {
+      - tetromino: string[][]
+      - position: { x: number, y: number }
+      + setTetromino(): void
+      + getTetromino(): void
+      + setPosition({ x: number, y: number }): void
+      + getPosition(): { x: number, y: number }
+    }
+    class Field {}
+    FieldInterface <|-- Field
+
+    Interface TetrominoManager {
+      - tetromino: string[][]
+      - position: { x: number, y: number }
+      - nextTetromino: 'LTetromino'|'OTetromino'|'STetromino'|'ZTetromino'|'JTetromino'|'TTetromino'
+      + move(): void
+      + drop(): void
+      - canSpin(): boolean
+      - canMove(): boolean
+      - chooseNextTetromino(): 'LTetromino'|'OTetromino'|'STetromino'|'ZTetromino'|'JTetromino'|'TTetromino'
+      + setPosition({ x: number, y: number }): void
+      + getPosition(): { x: number, y: number }
+      + getTetromino(): string[][]
+    }
+    class PartsManager
+    Interface Tetromino {
+      - type: string
+      - tetromino: string[][]
+      - status: 'ready' | 'dropping' | 'done'
+      - position: { x: number, y: number }
+
+      + spinLeft(): void
+      + spinRight(): void
+      + move(): void
+      + drop(): void
+      + getPosition(): { x: number, y: number }
+    }
+    class LTetromino {
+      - type: 'LTetromino'
+      - bit: [['l', '', '', ''], ['l', '', '', ''], ['l', '', '', ''], ['l', '', '', '']]
+    }
+    class OTetromino {
+      - type: 'OTetromino'
+      - bit: [['', '', '', ''], ['', 'o', 'o', ''], ['', 'o', 'o', ''], ['', '', '', '']]
+    }
+    class STetromino {
+      - type: 'STetromino'
+      - bit: [['', '', '', ''], ['', 's', 's', ''], ['s', 's', '', ''], ['', '', '', '']]
+    }
+    class ZTetromino {
+      - type: 'ZTetromino'
+      - bit: [['', '', '', ''], ['z', 'z', '', ''], ['', 'z', 'z', ''], ['', '', '', '']]
+    }
+    class JTetromino {
+      - type: 'JTetromino'
+      - bit: [['', '', '', ''], ['', '', 'j', ''], ['', '', 'j', ''], ['', 'j', 'j', '']]
+    }
+    class TTetromino {
+      - type: 'TTetromino'
+      - bit: [['', '', '', ''], ['', 't', 't', 't'], ['', '', 't', ''], ['', '', '', '']]
+    }
+    TetrominoManager ---> Tetromino
+    TetrominoManager ---> FieldInterface
+    TetrominoManager ---> ScoreInterface
+    TetrominoManager <|-- PartsManager
+    Tetromino <|-- LTetromino
+    Tetromino <|-- OTetromino
+    Tetromino <|-- STetromino
+    Tetromino <|-- ZTetromino
+    Tetromino <|-- JTetromino
+    Tetromino <|-- TTetromino
+  }
+}
+
+@enduml

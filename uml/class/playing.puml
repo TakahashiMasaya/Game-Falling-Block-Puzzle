@@ -1,0 +1,67 @@
+@startuml
+
+namespace Application {
+  namespace Scene {
+    class SceneChanger{}
+    interface SceneInterface {}
+
+    SceneChanger --> SceneInterface
+    SceneInterface <|-- Scene
+    class Scene{}
+  }
+
+  namespace Interactor {
+    class InteractiveManager {}
+    interface InteractorInterface {}
+    InteractorInterface <--- InteractiveManager
+    InteractorInterface <|-- InvokeToScene
+    InteractorInterface <|-- StatusManager
+  }
+}
+
+namespace Domain {
+  namespace Parts {
+    Interface PartsManagerInterface
+    class PartsManager
+    Interface PartsInterface
+    class Parts
+    PartsManagerInterface <|-- PartsManager
+    PartsManagerInterface ---> PartsInterface
+    PartsInterface <|-- Parts 
+  }
+}
+
+namespace Presentation {
+  namespace Screen {
+    class APICanvas{}
+  }
+  namespace Audio {
+    class AudioContext{}
+  }
+  namespace Controller {
+    interface InputDeviceInterface{}
+    InputDeviceInterface <|-- InputDevice
+
+    class TranslateController{}
+    InputDeviceInterface ---> TranslateController
+  }
+}
+
+
+namespace Repository {
+  class Repository {}
+  interface RepositoryInterface {}
+  RepositoryInterface <|-- Repository
+}
+
+Presentation.Controller.TranslateController --> Application.Interactor.InteractiveManager
+
+Application.Scene.SceneInterface --> Domain.Parts.PartsManagerInterface
+Application.Interactor.InteractiveManager <-- Application.Scene.SceneChanger : When not pause
+Application.Interactor.InteractiveManager --> Application.Scene.SceneChanger : When pause
+Presentation.Screen.APICanvas <-- Application.Scene.SceneInterface
+Presentation.Audio.AudioContext <-- Application.Scene.SceneInterface
+
+Repository.RepositoryInterface <-- Application.Scene.SceneChanger
+
+@enduml
