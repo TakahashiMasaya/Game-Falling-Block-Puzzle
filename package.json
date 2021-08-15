@@ -1,0 +1,19 @@
+{
+  "name": "game-block-down",
+  "version": "1.0.0",
+  "description": "break blocks!",
+  "main": "index.js",
+  "author": "Takahashi Masaya",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/runtime": "^7.15.3",
+    "babel-loader": "^8.2.2",
+    "html-webpack-plugin": "^5.3.2",
+    "webpack": "^5.50.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  }
+}
