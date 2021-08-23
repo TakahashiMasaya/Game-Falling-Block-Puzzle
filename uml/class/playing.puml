@@ -1,67 +1,252 @@
 @startuml
 
+namespace Presenters {
+  namespace Dom {
+    class Dom {
+      - mainController: Dom
+      - spinLeft: Dom
+      - spinRight: Dom
+      - enter: Dom
+
+      + init({ mainController: Dom, spinLeft: Dom, spinRight: Dom, enter: Dom }): void
+      + opening(): void
+      + playing(): void
+      + gameover(): void
+    }
+    Dom <--- InteractorForPresenter.InteractiveScreen
+  }
+  namespace Screen {
+    class Canvas {
+      - images: {'player': { src:'images/shooting_player.png', rate:1.00, obj:new Image}}
+      - init(): void
+      + drawImage({ texture: string, sx, number, sy, number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number }): void
+    }
+    Canvas <--- InteractorForPresenter.InteractiveScreen
+  }
+  namespace Audio {
+    class AudioContext{
+      - playing: []
+      - sound: []
+      - context: AudioContext
+      - data: { 'shot_laser': { src:'audios/shot_laser.mp3', volume:1.0, loopOffset: 0, buf:{}},
+      + init() : void
+      + play({ name: string }) : void
+      + stop({ name: string }): void
+      + stop(): void
+      + makeSound({ name: string }) : void
+    }
+    AudioContext <--- InteractorForPresenter.InteractiveScreen
+  }
+}
+
+' Presentersに情報を渡すための情報を加工する
+namespace InteractorForPresenter {
+  class InteractiveScreen {
+    + draw({{ x: number, y: number, textue: string }[]): void
+    + sound(): void
+    + DOMOpening(): void
+    + DOMPlaying(): void
+    + DOMGameover(): void
+  }
+}
+
+namespace InteractorForController {
+  class InteractiveController {
+    - status: { up: boolean, right: boolean, down: boolean, left: boolean, spinRight: boolean, spinLeft: boolean, enter: boolean }
+    + up(): void
+    + right(): void
+    + down(): void
+    + left(): void
+    + spinLeft(): void
+    + spinRight(): void
+    + enter(): void
+    + keyStatus(): { up: boolean, right: boolean, down: boolean, left: boolean, spinRight: boolean, spinLeft: boolean, enter: boolean }
+  }
+}
+
 namespace Application {
   namespace Scene {
-    class SceneChanger{}
-    interface SceneInterface {}
+    class SceneChanger{
+      - scene: SceneStart | ScenePlaying | SceneGameover | null
+      + next(): void
+    }
+    interface SceneInterface {
+      + start(): void
+      + move(): void
+      + pause(): void
+      + next(): void
+    }
 
     SceneChanger --> SceneInterface
-    SceneInterface <|-- Scene
-    class Scene{}
+    SceneInterface <|-- SceneStart
+    SceneInterface <|-- ScenePlaying
+    SceneInterface <|-- SceneGameover
+    class SceneStart{
+    }
+    class ScenePlaying{
+      - tetrominoCollidedTimes: number
+      - soundForBackground: string
+      - soundForReachedTetromino: string
+      - status: 'ready'|'playing'
+
+    }
+    InteractorForPresenter.InteractiveScreen <--- SceneInterface
+    InteractorForController.InteractiveController <--- SceneInterface
   }
 
-  namespace Interactor {
-    class InteractiveManager {}
-    interface InteractorInterface {}
-    InteractorInterface <--- InteractiveManager
-    InteractorInterface <|-- InvokeToScene
-    InteractorInterface <|-- StatusManager
+  ' tetrominoとfieldで衝突判定をする
+  class CollisionalTetromino {
+    + isCollision({ tetromino: Tetromino, field: Field }): boolean
+    + isTetrominoReached({ tetromino: Tetromino, field: Field }): boolean
   }
+
+  ' fieldを描画用に置換する
+  class TranferringToDraw {
+    + set(string[][]): void
+    + transfer(): { x: number, y: number, texture: string }[] 
+  }
+  TranferringToDraw <-- Application.Scene.ScenePlaying
+  TranferringToDraw <-- Application.Scene.SceneGameover
+  CollisionalTetromino <-- Application.Scene.ScenePlaying
+
+}
+
+namespace Controllers {
+  interface Controller {
+    + createEvent(): void
+  }
+  class PC {
+    + createEvent(): void
+  }
+  class SP {
+    - mainController: Dom
+    - spinLeft: Dom
+    - spinRight: Dom
+    - enter: Dom
+    + createEvent(): void
+  }
+  Controller <|-- PC
+  Controller <|-- SP
+  InteractorForController.InteractiveController <--- Controller
 }
 
 namespace Domain {
+  nameSpace Design {
+    class ScoreBoard {
+      - x: number
+      - y: number
+      - score: Score
+      - texture: 'scoreBoard'
+      + getStatus(): { x: number, y: number, texture: string }
+    }
+    interface GameBoardInterface {
+      - x: number
+      - y: number
+      - gameBoard: GameBoard
+      - texture: 'gameBoard'
+      + getStatus(): { x: number, y: number, texture: string }
+    }
+    GameBoardInterface <|-- GameBoard10x20
+    class GameBoard10x20 {
+      - texture: 'gameBoard10x20'
+    }
+    class NextTetrominosBoard {
+      - x: number
+      - y: number
+      - nextTetrominos: NextTetrominos 
+      - texture: 'nextTetrominosBoard'
+      + getStatus(): { x: number, y: number, texture: string }
+    }
+  }
+  Application.Scene.ScenePlaying ---> Domain.Design
+  Application.Scene.SceneGameover ---> Domain.Design
+
   namespace Parts {
-    Interface PartsManagerInterface
-    class PartsManager
-    Interface PartsInterface
-    class Parts
-    PartsManagerInterface <|-- PartsManager
-    PartsManagerInterface ---> PartsInterface
-    PartsInterface <|-- Parts 
+    interface ScoreInterface {
+      - score: number
+      + add(number): void
+    }
+    class Score {}
+    ScoreInterface <|-- Score
+
+    interface FieldInterface {
+      - status: string[][]
+      + update({ x: number, y: number, tetromino: string[][] }): void
+      + canRemoveLine(): boolean
+      + removeLines(): void
+      + get(): string[][]
+    }
+    FieldInterface <|-- Field10x20
+    class Field10x20 {
+      - status: [ ['0', '0', ... '0'], ['0', '0', ... '0'], ... ['0', '0', ... '0']]
+    }
+
+    Class NextTetrominos {
+      - tetrominos: Tetromino[]
+      + getTetromino(): Tetromino
+    }
+
+    Class ActiveTetromino {
+      - tetromino: Tetromino
+      - status: { x: number, y: number, tetromino: string[][] }
+      - prevStatus: { x: number, y: number, tetromino: string[][] }
+
+      + start({ tetromino: Tetromino }): void
+      + moveLeft(): void
+      + moveRight(): void
+      + moveDown(): void
+      + spinLeft(): void
+      + spinRight(): void
+      + getStatus(): status
+      + saveStatus(): void
+    }
+    Interface Tetromino {
+      - pieces: string[][][]
+      - spinStatus: number
+
+      + spinLeft(): void
+      + spinRight(): void
+      + getPiece(): string[][]
+      + getStatusToSpinLeft(): string[][]
+      + getStatusToSpinRight(): string[][]
+    }
+    class ITetromino {
+      - pieces: [['', 'l', '', ''], ['', 'l', '', ''], ['', 'l', '', ''], ['', 'l', '', '']]
+    }
+    class LTetromino {
+      - pieces: [[l', '', '',], ['l', '', ''], ['l', 'l', '']]
+    }
+    class OTetromino {
+      - pieces: [['o', 'o'], ['o', 'o']]
+    }
+    class STetromino {
+      - pieces: [['', 's', 's'], ['s', 's', ''], ['', '', '']]
+    }
+    class ZTetromino {
+      - pieces: [['z', 'z', ''], ['', 'z', 'z'], ['', '', '']]
+    }
+    class JTetromino {
+      - pieces: [['', '', 'j'], ['', '', 'j'], ['', 'j', 'j']]
+    }
+    class TTetromino {
+      - pieces: [['', 't', ''], ['t', 't', 't'], ['', '', '']]
+    }
+
+    NextTetrominos ---> Tetromino
+    ActiveTetromino ---> Tetromino
+    Tetromino <|-- ITetromino
+    Tetromino <|-- LTetromino
+    Tetromino <|-- OTetromino
+    Tetromino <|-- STetromino
+    Tetromino <|-- ZTetromino
+    Tetromino <|-- JTetromino
+    Tetromino <|-- TTetromino
   }
+
+  Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
+  Application.Scene.ScenePlaying ---> Domain.Parts.NextTetrominos
+  Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
+  Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface
 }
-
-namespace Presentation {
-  namespace Screen {
-    class APICanvas{}
-  }
-  namespace Audio {
-    class AudioContext{}
-  }
-  namespace Controller {
-    interface InputDeviceInterface{}
-    InputDeviceInterface <|-- InputDevice
-
-    class TranslateController{}
-    InputDeviceInterface ---> TranslateController
-  }
-}
-
-
-namespace Repository {
-  class Repository {}
-  interface RepositoryInterface {}
-  RepositoryInterface <|-- Repository
-}
-
-Presentation.Controller.TranslateController --> Application.Interactor.InteractiveManager
-
-Application.Scene.SceneInterface --> Domain.Parts.PartsManagerInterface
-Application.Interactor.InteractiveManager <-- Application.Scene.SceneChanger : When not pause
-Application.Interactor.InteractiveManager --> Application.Scene.SceneChanger : When pause
-Presentation.Screen.APICanvas <-- Application.Scene.SceneInterface
-Presentation.Audio.AudioContext <-- Application.Scene.SceneInterface
-
-Repository.RepositoryInterface <-- Application.Scene.SceneChanger
 
 @enduml
