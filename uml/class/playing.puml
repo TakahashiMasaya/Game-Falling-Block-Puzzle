@@ -1,4 +1,4 @@
-@startuml
+@startuml Overview
 
 namespace Presenters {
   namespace Dom {
@@ -96,8 +96,8 @@ namespace Application {
 
   ' tetrominoとfieldで衝突判定をする
   class CollisionalTetromino {
-    + isCollision({ tetromino: Tetromino, field: Field }): boolean
-    + isTetrominoReached({ tetromino: Tetromino, field: Field }): boolean
+    + isCollision({ tetromino: Piece, field: Field }): boolean
+    + isTetrominoReached({ tetromino: Piece, field: Field }): boolean
   }
 
   ' fieldを描画用に置換する
@@ -182,16 +182,16 @@ namespace Domain {
     }
 
     Class NextTetrominos {
-      - tetrominos: Tetromino[]
-      + getTetromino(): Tetromino
+      - tetrominos: Piece[]
+      + getTetromino(): Piece
     }
 
     Class ActiveTetromino {
-      - tetromino: Tetromino
+      - tetromino: Piece
       - status: { x: number, y: number, tetromino: string[][] }
       - prevStatus: { x: number, y: number, tetromino: string[][] }
 
-      + start({ tetromino: Tetromino }): void
+      + start({ tetromino: Piece }): void
       + moveLeft(): void
       + moveRight(): void
       + moveDown(): void
@@ -200,7 +200,7 @@ namespace Domain {
       + getStatus(): status
       + saveStatus(): void
     }
-    Interface Tetromino {
+    Interface Piece {
       - pieces: string[][][]
       - spinStatus: number
 
@@ -228,19 +228,19 @@ namespace Domain {
     class JTetromino {
       - pieces: [['', '', 'j'], ['', '', 'j'], ['', 'j', 'j']]
     }
-    class TTetromino {
+    class Piece {
       - pieces: [['', 't', ''], ['t', 't', 't'], ['', '', '']]
     }
 
-    NextTetrominos ---> Tetromino
-    ActiveTetromino ---> Tetromino
-    Tetromino <|-- ITetromino
-    Tetromino <|-- LTetromino
-    Tetromino <|-- OTetromino
-    Tetromino <|-- STetromino
-    Tetromino <|-- ZTetromino
-    Tetromino <|-- JTetromino
-    Tetromino <|-- TTetromino
+    NextTetrominos ---> Piece
+    ActiveTetromino ---> Piece
+    Piece <|-- ITetromino
+    Piece <|-- LTetromino
+    Piece <|-- OTetromino
+    Piece <|-- STetromino
+    Piece <|-- ZTetromino
+    Piece <|-- JTetromino
+    Piece <|-- Piece
   }
 
   Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
