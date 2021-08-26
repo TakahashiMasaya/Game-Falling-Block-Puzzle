@@ -183,7 +183,10 @@ namespace Domain {
 
     Class NextTetrominos {
       - tetrominos: Piece[]
-      + getTetromino(): Piece
+      - stockQuantity: number
+      + pickTetromino(): void
+      + list(): Piece[]
+      + next(): Piece
     }
 
     Class ActiveTetromino {
@@ -200,7 +203,7 @@ namespace Domain {
       + getStatus(): status
       + saveStatus(): void
     }
-    Interface Piece {
+    Interface Tetromino {
       - pieces: string[][][]
       - spinStatus: number
 
@@ -232,15 +235,15 @@ namespace Domain {
       - pieces: [['', 't', ''], ['t', 't', 't'], ['', '', '']]
     }
 
-    NextTetrominos ---> Piece
-    ActiveTetromino ---> Piece
-    Piece <|-- ITetromino
-    Piece <|-- LTetromino
-    Piece <|-- OTetromino
-    Piece <|-- STetromino
-    Piece <|-- ZTetromino
-    Piece <|-- JTetromino
-    Piece <|-- Piece
+    NextTetrominos ---> Tetromino
+    ActiveTetromino ---> Tetromino
+    Tetromino <|-- ITetromino
+    Tetromino <|-- LTetromino
+    Tetromino <|-- OTetromino
+    Tetromino <|-- STetromino
+    Tetromino <|-- ZTetromino
+    Tetromino <|-- JTetromino
+    Tetromino <|-- Piece
   }
 
   Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino

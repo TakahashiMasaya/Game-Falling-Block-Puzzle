@@ -1,4 +1,4 @@
-import { STetromino } from '@/tetromino/STetromino';
+import { STetromino } from '@/domain/parts/tetrominos/STetromino';
 import { Piece } from '@/type/Piece';
 
 const pieces: Piece[] = [

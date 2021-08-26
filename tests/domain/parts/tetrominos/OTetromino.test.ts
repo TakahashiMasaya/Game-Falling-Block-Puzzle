@@ -1,4 +1,4 @@
-import { OTetromino } from '@/tetromino/OTetromino';
+import { OTetromino } from '@/domain/parts/tetrominos/OTetromino';
 import { Piece } from '@/type/Piece';
 
 const pieces: Piece[] = [

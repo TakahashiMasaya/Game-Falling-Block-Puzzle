@@ -1,10 +1,12 @@
 import { Piece } from '@/type/Piece';
-import { Tetromino } from '@/tetromino/Tetromino';
+import { Tetromino } from '@/domain/parts/tetrominos/Tetromino';
 
-export class OTetromino implements Tetromino {
+export class LTetromino implements Tetromino {
   public pieces: Piece[] = [
-    [['o', 'o'], ['o', 'o']],
-    [['o', 'o'], ['o', 'o']],
+    [['l', '', ''], ['l', '', ''], ['l', 'l', '']],
+    [['', '', ''], ['', '', 'l'], ['l', 'l', 'l']],
+    [['', 'l', 'l'], ['', '', 'l'], ['', '', 'l']],
+    [['l', 'l', 'l'], ['l', '', ''], ['', '', '']],
   ]
 
   public spinStatus: number = 0

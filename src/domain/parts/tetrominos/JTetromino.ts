@@ -1,5 +1,5 @@
 import { Piece } from '@/type/Piece';
-import { Tetromino } from '@/tetromino/Tetromino';
+import { Tetromino } from '@/domain/parts/tetrominos/Tetromino';
 
 export class JTetromino implements Tetromino {
   public pieces: Piece[] = [
