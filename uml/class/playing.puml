@@ -60,6 +60,13 @@ namespace InteractorForController {
     + spinLeft(): void
     + spinRight(): void
     + enter(): void
+    + offUp(): void
+    + offRight(): void
+    + offDown(): void
+    + offLeft(): void
+    + offSpinLeft(): void
+    + offSpinRight(): void
+    + offEnter(): void
     + keyStatus(): { up: boolean, right: boolean, down: boolean, left: boolean, spinRight: boolean, spinLeft: boolean, enter: boolean }
   }
 }
@@ -105,6 +112,18 @@ namespace Application {
     + set(string[][]): void
     + transfer(): { x: number, y: number, texture: string }[] 
   }
+
+  ' 次のtetrominoをセットする
+  Class NextTetrominos {
+    - list: number[]
+    - stockQuantity: number
+    - tetrominoQuantity: number
+    - readyToTetrominos(): void
+    + getList(): number[]
+    + next(): number
+  }
+
+  NextTetrominos <-- Application.Scene.ScenePlaying
   TranferringToDraw <-- Application.Scene.ScenePlaying
   TranferringToDraw <-- Application.Scene.SceneGameover
   CollisionalTetromino <-- Application.Scene.ScenePlaying
@@ -164,7 +183,8 @@ namespace Domain {
   namespace Parts {
     interface ScoreInterface {
       - score: number
-      + add(number): void
+      + add(number: number): void
+      + reset(): void
     }
     class Score {}
     ScoreInterface <|-- Score
@@ -174,45 +194,36 @@ namespace Domain {
       + update({ x: number, y: number, tetromino: string[][] }): void
       + canRemoveLine(): boolean
       + removeLines(): void
-      + get(): string[][]
+      + getStatus(): string[][]
     }
     FieldInterface <|-- Field10x20
     class Field10x20 {
       - status: [ ['0', '0', ... '0'], ['0', '0', ... '0'], ... ['0', '0', ... '0']]
     }
 
-    Class NextTetrominos {
-      - tetrominos: Piece[]
-      - stockQuantity: number
-      + pickTetromino(): void
-      + list(): Piece[]
-      + next(): Piece
-    }
-
     Class ActiveTetromino {
       - tetromino: Piece
-      - status: { x: number, y: number, tetromino: string[][] }
-      - prevStatus: { x: number, y: number, tetromino: string[][] }
 
-      + start({ tetromino: Piece }): void
-      + moveLeft(): void
-      + moveRight(): void
-      + moveDown(): void
-      + spinLeft(): void
-      + spinRight(): void
-      + getStatus(): status
-      + saveStatus(): void
+      + start({ x: number, y: number, tetromino: number }): void
+      + nextAction({left: boolean, right: boolean, down: boolean, spinLeft: boolean, spinRight: booelan }): { x: number: y: number, tetromino: string[][]}
+      + setAction({left: boolean, right: boolean, down: boolean, spinLeft: boolean, spinRight: booelan }): void
+      + getStatus(): { x: number, y: number, tetromino: string[][] }
     }
-    Interface Tetromino {
-      - pieces: string[][][]
+    Interface InterfaceTetromino {
+      - pieces: string[][]
       - spinStatus: number
 
       + spinLeft(): void
       + spinRight(): void
       + getPiece(): string[][]
-      + getStatusToSpinLeft(): string[][]
-      + getStatusToSpinRight(): string[][]
+      + getPieceToSpinLeft(): string[][]
+      + getPieceToSpinRight(): string[][]
     }
+
+    class Tetromino {
+      - pieces: [][]
+    }
+
     class ITetromino {
       - pieces: [['', 'l', '', ''], ['', 'l', '', ''], ['', 'l', '', ''], ['', 'l', '', '']]
     }
@@ -235,8 +246,8 @@ namespace Domain {
       - pieces: [['', 't', ''], ['t', 't', 't'], ['', '', '']]
     }
 
-    NextTetrominos ---> Tetromino
     ActiveTetromino ---> Tetromino
+    InterfaceTetromino <|-- Tetromino 
     Tetromino <|-- ITetromino
     Tetromino <|-- LTetromino
     Tetromino <|-- OTetromino
@@ -247,7 +258,6 @@ namespace Domain {
   }
 
   Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
-  Application.Scene.ScenePlaying ---> Domain.Parts.NextTetrominos
   Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
   Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface
 }
