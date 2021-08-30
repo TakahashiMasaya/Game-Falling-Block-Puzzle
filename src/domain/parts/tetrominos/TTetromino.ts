@@ -1,26 +1,11 @@
 import { Piece } from '@/type/Piece';
-import { Tetromino } from '@/domain/parts/tetrominos/Tetromino';
+import { Tetromino } from './Tetromino';
 
-export class TTetromino implements Tetromino {
+export class TTetromino extends Tetromino {
   public pieces: Piece[] = [
-    [['', '', ''], ['t', 't', 't'], ['', 't', '']],
-    [['t', '', ''], ['t', 't', ''], ['t', '', '']],
-    [['', '', ''], ['', 't', ''], ['t', 't', 't']],
-    [['', '', 't'], ['', 't', 't'], ['', '', 't']],
-  ]
-
-  public spinStatus: number = 0
-
-  public getPiece = (): Piece => this.pieces[this.spinStatus]
-
-  public spinLeft = (): void => {
-    this.spinStatus += 1;
-    this.spinStatus %= this.pieces.length;
-  }
-
-  public spinRight = (): void => {
-    this.spinStatus -= 1;
-    const { length } = this.pieces;
-    this.spinStatus = ((this.spinStatus % length) + length) % length;
-  }
+    [['0', '', '0'], ['t', 't', 't'], ['0', 't', '0']],
+    [['t', '0', '0'], ['t', 't', '0'], ['t', '0', '0']],
+    [['0', '0', '0'], ['0', 't', '0'], ['t', 't', 't']],
+    [['0', '0', 't'], ['0', 't', 't'], ['0', '0', 't']],
+  ];
 }
