@@ -190,15 +190,15 @@ namespace Domain {
     ScoreInterface <|-- Score
 
     interface FieldInterface {
-      - status: string[][]
       + update({ x: number, y: number, tetromino: string[][] }): void
-      + canRemoveLine(): boolean
-      + removeLines(): void
+      + canRemoveFullRow(): boolean
+      + removeFullRow(): void
       + getStatus(): string[][]
     }
     FieldInterface <|-- Field10x20
     class Field10x20 {
       - status: [ ['0', '0', ... '0'], ['0', '0', ... '0'], ... ['0', '0', ... '0']]
+      - replaceBitString({ string: string, replace: string, start: number })
     }
 
     Class ActiveTetromino {
@@ -225,25 +225,25 @@ namespace Domain {
     }
 
     class ITetromino {
-      - pieces: [['', 'l', '', ''], ['', 'l', '', ''], ['', 'l', '', ''], ['', 'l', '', '']]
+      - pieces: [['0', 'l', '0', '0'], ['0', 'l', '0', '0'], ['0', 'l', '0', '0'], ['0', 'l', '0', '0']]
     }
     class LTetromino {
-      - pieces: [[l', '', '',], ['l', '', ''], ['l', 'l', '']]
+      - pieces: [[l', '0', '0',], ['l', '0', '0'], ['l', 'l', '0']]
     }
     class OTetromino {
       - pieces: [['o', 'o'], ['o', 'o']]
     }
     class STetromino {
-      - pieces: [['', 's', 's'], ['s', 's', ''], ['', '', '']]
+      - pieces: [['0', 's', 's'], ['s', 's', '0'], ['0', '0', '0']]
     }
     class ZTetromino {
-      - pieces: [['z', 'z', ''], ['', 'z', 'z'], ['', '', '']]
+      - pieces: [['z', 'z', '0'], ['0', 'z', 'z'], ['0', '0', '0']]
     }
     class JTetromino {
-      - pieces: [['', '', 'j'], ['', '', 'j'], ['', 'j', 'j']]
+      - pieces: [['0', '0', 'j'], ['0', '0', 'j'], ['0', 'j', 'j']]
     }
     class Piece {
-      - pieces: [['', 't', ''], ['t', 't', 't'], ['', '', '']]
+      - pieces: [['0', 't', '0'], ['t', 't', 't'], ['0', '0', '0']]
     }
 
     ActiveTetromino ---> Tetromino
