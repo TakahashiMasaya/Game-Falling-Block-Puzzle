@@ -46,25 +46,26 @@ export class Field10x20 implements FieldInterface {
    * @param {ActiveTetrominoStatus} { x, y, tetromino }
    */
   public update = ({ x, y, tetromino }: ActiveTetrominoStatus): void => {
-    const tetrominoRows = tetromino.length;
-    let num = 0;
-    this.field = [
-      ...this.field.map((line, i) => {
-        if (i < y) {
-          return line;
+    const fieldCols = this.field[0].length - 1;
+    const fieldRows = this.field.length - 1;
+
+    // tetrominoの各bit値でfieldのbit値を置換する
+    for (let i = 0; i < tetromino.length; i += 1) {
+      // row
+      const row: string[] = tetromino[i];
+      for (let j = 0; j < row.length; j += 1) {
+        // bit
+        const bit: string = row[j];
+        if (x + j >= 0
+          && x + j <= fieldCols
+          && y + i >= 0
+          && y + i <= fieldRows) {
+          if (bit !== '0') {
+            this.field[y + i][x + j] = bit;
+          }
         }
-        if (i >= y + tetrominoRows) {
-          return line;
-        }
-        const strLine = this.replaceBitString(
-          line.join(''),
-          tetromino[num].join(''),
-          x,
-        ).split('');
-        num += 1;
-        return strLine;
-      }),
-    ];
+      }
+    }
   }
 
   /**

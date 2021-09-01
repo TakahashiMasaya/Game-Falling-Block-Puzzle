@@ -1,7 +1,7 @@
 @startuml Overview
 
 namespace Presenters {
-  namespace Dom {
+  namespace Screen {
     class Dom {
       - mainController: Dom
       - spinLeft: Dom
@@ -13,15 +13,14 @@ namespace Presenters {
       + playing(): void
       + gameover(): void
     }
-    Dom <--- InteractorForPresenter.InteractiveScreen
-  }
-  namespace Screen {
+
     class Canvas {
-      - images: {'player': { src:'images/shooting_player.png', rate:1.00, obj:new Image}}
-      - init(): void
+      - canvas: HTMLCanvasElement 
+      - context: CanvasRenderingContext2D
       + drawImage({ texture: string, sx, number, sy, number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number }): void
     }
     Canvas <--- InteractorForPresenter.InteractiveScreen
+    Dom <--- InteractorForPresenter.InteractiveScreen
   }
   namespace Audio {
     class AudioContext{
@@ -42,6 +41,7 @@ namespace Presenters {
 ' Presentersに情報を渡すための情報を加工する
 namespace InteractorForPresenter {
   class InteractiveScreen {
+    - images: {'player': { src:'images/shooting_player.png', rate:1.00, obj:new Image}}
     + draw({{ x: number, y: number, textue: string }[]): void
     + sound(): void
     + DOMOpening(): void
@@ -102,7 +102,7 @@ namespace Application {
   }
 
   ' tetrominoとfieldで衝突判定をする
-  class CollisionalTetromino {
+  class CollisionalDetector {
     + isCollision({ tetromino: Piece, field: Field }): boolean
     + isTetrominoReached({ tetromino: Piece, field: Field }): boolean
   }
@@ -126,23 +126,21 @@ namespace Application {
   NextTetrominos <-- Application.Scene.ScenePlaying
   TranferringToDraw <-- Application.Scene.ScenePlaying
   TranferringToDraw <-- Application.Scene.SceneGameover
-  CollisionalTetromino <-- Application.Scene.ScenePlaying
+  CollisionalDetector <-- Application.Scene.ScenePlaying
 
 }
 
 namespace Controllers {
   interface Controller {
-    + createEvent(): void
+    + setAction({ up: void, right: void, down: void, left: void, spinLeft: void, spinRight: void, enter: void, offUp: void, offRight: void, offDown: void, offLeft: void, offSpinLeft: void, offSpinRight: void, offEnter: void})
   }
   class PC {
-    + createEvent(): void
   }
   class SP {
     - mainController: Dom
     - spinLeft: Dom
     - spinRight: Dom
     - enter: Dom
-    + createEvent(): void
   }
   Controller <|-- PC
   Controller <|-- SP

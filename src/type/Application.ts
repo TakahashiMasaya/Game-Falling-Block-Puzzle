@@ -33,3 +33,8 @@ export type paramUserControllingTetromino = {
   spinLeft: boolean;
   spinRight: boolean;
 };
+
+export type paramIsCollision = {
+  tetromino: ActiveTetrominoStatus;
+  field: string[][];
+}
