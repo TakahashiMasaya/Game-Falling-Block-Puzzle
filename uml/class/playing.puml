@@ -17,10 +17,19 @@ namespace Presenters {
     class Canvas {
       - canvas: HTMLCanvasElement 
       - context: CanvasRenderingContext2D
+      - imageAssets: ImageAssets
       + drawImage({ texture: string, sx, number, sy, number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number }): void
     }
-    Canvas <--- InteractorForPresenter.InteractiveScreen
-    Dom <--- InteractorForPresenter.InteractiveScreen
+
+    class ImageAssets {
+      - images: {'player': { src:'images/shooting_player.png', rate:1.00, obj:new Image}}
+      + createAssets(): void
+      + get({ texture: string }): Image
+    }
+
+    Canvas <--- InteractorForPresenter.InteractivePresenter
+    Dom <--- InteractorForPresenter.InteractivePresenter
+    ImageAssets <--- Canvas
   }
   namespace Audio {
     class AudioContext{
@@ -34,19 +43,25 @@ namespace Presenters {
       + stop(): void
       + makeSound({ name: string }) : void
     }
-    AudioContext <--- InteractorForPresenter.InteractiveScreen
+    AudioContext <--- InteractorForPresenter.InteractivePresenter
+
+    class AudioAssets {
+      - assets: Audio
+      + createAssets(): void
+      + get(): Audio
+    }
+    AudioAssets <--- AudioContext
   }
 }
 
 ' Presentersに情報を渡すための情報を加工する
 namespace InteractorForPresenter {
-  class InteractiveScreen {
-    - images: {'player': { src:'images/shooting_player.png', rate:1.00, obj:new Image}}
-    + draw({{ x: number, y: number, textue: string }[]): void
-    + sound(): void
-    + DOMOpening(): void
-    + DOMPlaying(): void
-    + DOMGameover(): void
+  class InteractivePresenter {
+    + draw({{ x: number, y: number, texture: string }[]): void
+    + sound({ sound: string }[]): void
+    + setBackgroundSound({ backgroundSound: string }): void
+    + playBackgroundSound(): void
+    + stopBackgroundSound(): void
   }
 }
 
@@ -75,13 +90,14 @@ namespace Application {
   namespace Scene {
     class SceneChanger{
       - scene: SceneStart | ScenePlaying | SceneGameover | null
+      - list: (SceneStart | ScenePlaying | SceneGameover)[] | null
+      - listNum: number
+      + start(): void
+      + reset(): void
       + next(): void
     }
     interface SceneInterface {
       + start(): void
-      + move(): void
-      + pause(): void
-      + next(): void
     }
 
     SceneChanger --> SceneInterface
@@ -89,15 +105,31 @@ namespace Application {
     SceneInterface <|-- ScenePlaying
     SceneInterface <|-- SceneGameover
     class SceneStart{
+      - InteractiveController: InteractiveController
+      - InteractivePresenter: InteractivePresenter
+      + start()
+      - move()
+      - draw()
     }
     class ScenePlaying{
       - tetrominoCollidedTimes: number
       - soundForBackground: string
       - soundForReachedTetromino: string
       - status: 'ready'|'playing'
-
+      - InteractiveController: InteractiveController
+      - InteractivePresenter: InteractivePresenter
+      + start()
+      - move()
+      - draw()
     }
-    InteractorForPresenter.InteractiveScreen <--- SceneInterface
+    class SceneGameover{
+      - InteractiveController: InteractiveController
+      - InteractivePresenter: InteractivePresenter
+      + start()
+      - move()
+      - draw()
+    }
+    InteractorForPresenter.InteractivePresenter <--- SceneInterface
     InteractorForController.InteractiveController <--- SceneInterface
   }
 
@@ -148,36 +180,6 @@ namespace Controllers {
 }
 
 namespace Domain {
-  nameSpace Design {
-    class ScoreBoard {
-      - x: number
-      - y: number
-      - score: Score
-      - texture: 'scoreBoard'
-      + getStatus(): { x: number, y: number, texture: string }
-    }
-    interface GameBoardInterface {
-      - x: number
-      - y: number
-      - gameBoard: GameBoard
-      - texture: 'gameBoard'
-      + getStatus(): { x: number, y: number, texture: string }
-    }
-    GameBoardInterface <|-- GameBoard10x20
-    class GameBoard10x20 {
-      - texture: 'gameBoard10x20'
-    }
-    class NextTetrominosBoard {
-      - x: number
-      - y: number
-      - nextTetrominos: NextTetrominos 
-      - texture: 'nextTetrominosBoard'
-      + getStatus(): { x: number, y: number, texture: string }
-    }
-  }
-  Application.Scene.ScenePlaying ---> Domain.Design
-  Application.Scene.SceneGameover ---> Domain.Design
-
   namespace Parts {
     interface ScoreInterface {
       - score: number
