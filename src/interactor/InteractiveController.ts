@@ -13,6 +13,12 @@ export class InteractiveController {
 
   public keyStatus = (): TInteractiveController => this.status
 
+  public reset = (): void => {
+    Object.keys(this.status).forEach((key) => {
+      this.status[key] = false;
+    });
+  }
+
   public up = (): void => {
     this.status = {
       ...this.status,

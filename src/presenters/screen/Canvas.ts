@@ -1,22 +1,13 @@
-export class Canvas {
-  private canvas: HTMLCanvasElement | null;
+import p5 from 'p5';
 
-  private context: CanvasRenderingContext2D | null;
-
-  constructor() {
-    this.canvas = document.createElement('canvas');
-    this.context = this.canvas.getContext('2d');
-  }
-
-  drawImage = ({
-    texture,
-    x,
-    y,
-  }): void => {
-    this.context.drawImage(
-      texture,
-      x,
-      y,
-    );
-  }
-}
+export const sketch = (p: p5) => {
+  p.setup = () => {
+    p.createCanvas(p.windowWidth, p.windowHeight);
+  };
+  p.draw = () => {
+    p.background('#0f2350');
+    p.noStroke();
+    p.fill(255);
+    p.ellipse(p.windowWidth / 2, p.windowHeight / 2, 50, 50);
+  };
+};

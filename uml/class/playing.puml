@@ -1,6 +1,9 @@
 @startuml Overview
 
 namespace Presenters {
+  namespace P5 {
+    class p5 {}
+  }
   namespace Screen {
     class Dom {
       - mainController: Dom
@@ -88,22 +91,28 @@ namespace InteractorForController {
 
 namespace Application {
   namespace Scene {
-    class SceneChanger{
-      - scene: SceneStart | ScenePlaying | SceneGameover | null
-      - list: (SceneStart | ScenePlaying | SceneGameover)[] | null
-      - listNum: number
-      + start(): void
-      + reset(): void
-      + next(): void
+    namespace Changer {
+      interface SceneChanger{
+        + start(): void
+      }
+      class SceneChangerP5{
+        - scene: SceneStart | ScenePlaying | SceneGameover | null
+        - list: (SceneStart | ScenePlaying | SceneGameover)[] | null
+        - listNum: number
+        - sketch(): void
+        + start(): void
+      }
+
+      class SceneChangerCanvas{
+      }
+
+      SceneChanger <|-- SceneChangerP5
+      SceneChanger <|-- SceneChangerCanvas
     }
+
     interface SceneInterface {
       + start(): void
     }
-
-    SceneChanger --> SceneInterface
-    SceneInterface <|-- SceneStart
-    SceneInterface <|-- ScenePlaying
-    SceneInterface <|-- SceneGameover
     class SceneStart{
       - InteractiveController: InteractiveController
       - InteractivePresenter: InteractivePresenter
@@ -129,14 +138,17 @@ namespace Application {
       - move()
       - draw()
     }
-    InteractorForPresenter.InteractivePresenter <--- SceneInterface
-    InteractorForController.InteractiveController <--- SceneInterface
+    SceneInterface <|-- SceneStart
+    SceneInterface <|-- ScenePlaying
+    SceneInterface <|-- SceneGameover
+    SceneStart ---> InteractorForController.InteractiveController
+    ScenePlaying ---> InteractorForController.InteractiveController
+    SceneGameover ---> InteractorForController.InteractiveController
   }
 
-  ' tetrominoとfieldで衝突判定をする
+    ' tetrominoとfieldで衝突判定をする
   class CollisionalDetector {
     + isCollision({ tetromino: Piece, field: Field }): boolean
-    + isTetrominoReached({ tetromino: Piece, field: Field }): boolean
   }
 
   ' fieldを描画用に置換する
@@ -146,7 +158,7 @@ namespace Application {
   }
 
   ' 次のtetrominoをセットする
-  Class NextTetrominos {
+  class NextTetrominos {
     - list: number[]
     - stockQuantity: number
     - tetrominoQuantity: number
@@ -155,12 +167,20 @@ namespace Application {
     + next(): number
   }
 
-  NextTetrominos <-- Application.Scene.ScenePlaying
-  TranferringToDraw <-- Application.Scene.ScenePlaying
-  TranferringToDraw <-- Application.Scene.SceneGameover
-  CollisionalDetector <-- Application.Scene.ScenePlaying
-
 }
+
+Application.Scene.Changer.SceneChangerP5 --> Application.Scene.SceneStart
+Application.Scene.ScenePlaying --> Application.NextTetrominos
+Application.Scene.ScenePlaying --> Application.TranferringToDraw
+Application.Scene.SceneGameover --> Application.TranferringToDraw 
+Application.Scene.ScenePlaying --> Application.CollisionalDetector
+
+Application.Scene.Changer.SceneChangerP5 ---> Application.Scene.ScenePlaying
+Application.Scene.Changer.SceneChangerP5 ---> Application.Scene.SceneGameover
+Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.SceneStart
+Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.ScenePlaying
+Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.SceneGameover
+Application.Scene.Changer.SceneChangerCanvas ---> InteractorForPresenter.InteractivePresenter
 
 namespace Controllers {
   interface Controller {
@@ -257,9 +277,12 @@ namespace Domain {
     Tetromino <|-- Piece
   }
 
-  Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
-  Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
-  Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface
 }
+
+Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
+Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
+Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface
+
+Presenters.P5.p5 <--- Application.Scene.Changer.SceneChangerP5
 
 @enduml

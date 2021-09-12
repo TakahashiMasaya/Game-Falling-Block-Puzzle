@@ -1,3 +1,17 @@
+import { InteractiveController } from '@/interactor/InteractiveController';
+import { InteractivePresenter } from '@/interactor/InteractivePresenter';
+
+export interface Scene {
+  isEnd(): boolean;
+  move(): void;
+  draw();
+}
+
+export type paramScene = {
+  interactiveController: InteractiveController,
+  interactivePresenter: InteractivePresenter,
+}
+
 const DEFTetrominoID = {
   ITetromino: 0,
   JTetromino: 1,
