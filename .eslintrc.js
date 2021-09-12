@@ -3,10 +3,12 @@ module.exports = {
     browser: true,
     es2021: true,
     'jest/globals': true,
+    'p5js/p5': true,
   },
   extends: [
     'plugin:react/recommended',
     'airbnb',
+    'plugin:p5js/p5',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -20,6 +22,7 @@ module.exports = {
     'react',
     '@typescript-eslint',
     'jest',
+    'p5js',
   ],
   settings: {
     'import/resolver': {
@@ -54,5 +57,6 @@ module.exports = {
     'import/extensions': 0,
     'import/prefer-default-export': 0,
     '@typescript-eslint/no-unused-vars': ['error'],
+    'import/no-extraneous-dependencies': 0,
   },
 };
