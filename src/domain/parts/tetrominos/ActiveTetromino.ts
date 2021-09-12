@@ -64,7 +64,6 @@ export class ActiveTetromino {
     left, right, down, spinLeft, spinRight,
   }: paramUserControllingTetromino): void => {
     let { x, y, tetromino } = this.status;
-    y += 1;
     x = (left) ? x - 1 : x;
     x = (right) ? x + 1 : x;
     y = (down) ? y + 1 : y;
@@ -73,6 +72,14 @@ export class ActiveTetromino {
     tetromino = this.tetromino.getPiece();
     this.status = {
       x, y, tetromino,
+    };
+  }
+
+  public setDropping = (): void => {
+    const { y } = this.status;
+    this.status = {
+      ...this.status,
+      y: y + 1,
     };
   }
 

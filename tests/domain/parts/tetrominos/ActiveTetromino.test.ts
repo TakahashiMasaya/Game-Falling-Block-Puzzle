@@ -48,7 +48,7 @@ describe('ActiveTetromino', () => {
       const { x, y, tetromino } = at.getStatus();
       expect(x).toEqual(4);
       expect(y).toEqual(0);
-      expect(tetromino).toEqual(expect.arrayContaining([['0', '', '0'], ['t', 't', 't'], ['0', 't', '0']]));
+      expect(tetromino).toEqual(expect.arrayContaining([['0', '0', '0'], ['t', 't', 't'], ['0', 't', '0']]));
     });
     it('パラメータによる指定パーツ(ZTetromino)が正しいこと', () => {
       const at = new ActiveTetromino();
@@ -149,7 +149,7 @@ describe('ActiveTetromino', () => {
       });
       const { x, y, tetromino } = at.getStatus();
       expect(x).toEqual(3);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0']]));
     });
 
@@ -165,7 +165,7 @@ describe('ActiveTetromino', () => {
       });
       const { x, y, tetromino } = at.getStatus();
       expect(x).toEqual(5);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0']]));
     });
 
@@ -181,7 +181,7 @@ describe('ActiveTetromino', () => {
       });
       const { x, y, tetromino } = at.getStatus();
       expect(x).toEqual(4);
-      expect(y).toEqual(2);
+      expect(y).toEqual(1);
       expect(tetromino).toEqual(expect.arrayContaining([['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0']]));
     });
 
@@ -197,7 +197,7 @@ describe('ActiveTetromino', () => {
       });
       const { x, y, tetromino } = at.getStatus();
       expect(x).toEqual(4);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', '0', '0', '0'], ['0', '0', '0', '0'], ['i', 'i', 'i', 'i'], ['0', '0', '0', '0']]));
     });
 
@@ -213,7 +213,7 @@ describe('ActiveTetromino', () => {
       });
       const { x, y, tetromino } = at.getStatus();
       expect(x).toEqual(4);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', '0', '0', '0'], ['i', 'i', 'i', 'i'], ['0', '0', '0', '0'], ['0', '0', '0', '0']]));
     });
   });

@@ -2,7 +2,7 @@ import { STetromino } from '@/domain/parts/tetrominos/STetromino';
 import { Piece } from '@/type/Piece';
 
 const pieces: Piece[] = [
-  [['0', 's', 's'], ['s', 's', '0'], ['0', '0', '0']],
+  [['0', 's', 's'], ['s', 's', '0'], ['0', '0', '0']],
   [['s', '0', '0'], ['s', 's', '0'], ['0', 's', '0']],
   [['0', '0', '0'], ['0', 's', 's'], ['s', 's', '0']],
   [['0', 's', '0'], ['0', 's', 's'], ['0', '0', 's']],
