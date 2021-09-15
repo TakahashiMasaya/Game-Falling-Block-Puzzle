@@ -6,9 +6,11 @@ import { Score } from '@/domain/parts/score/Score';
 
 import { Field10x20 } from '@/domain/parts/field/Field10x20';
 import { ActiveTetromino } from '@/domain/parts/tetrominos/ActiveTetromino';
+import { NextTetromino } from '@/domain/parts/tetrominos/NextTetromino';
 import { CollisionalDetector } from '../CollisionalDetector';
 
 const at = new ActiveTetromino();
+const nt = new NextTetromino();
 const cd = new CollisionalDetector();
 const f = new Field10x20();
 
@@ -38,6 +40,10 @@ export class ScenePlaying implements Scene {
   private animationCount: number = 0;
 
   private isGameover: boolean = false;
+
+  private nextTetromino: {
+    type: number, tetromino: (string[][] | null)
+  } = { type: 0, tetromino: null };
 
   private transferredControllerStatus: typeControllButtons = {
     left: 0,
@@ -89,6 +95,7 @@ export class ScenePlaying implements Scene {
       }
     };
 
+    const { tetromino: nextTetromino } = this.nextTetromino;
     // fieldを表示
     this.drawing = f.getStatus()?.map((rows, y) => rows.reduce((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
       type: 'image',
@@ -111,21 +118,29 @@ export class ScenePlaying implements Scene {
       }] : ar), [])).flat(),
       {
         type: 'text',
-        position: { x: 290, y: 100 },
+        position: { x: 300, y: 100 },
         value: 'next',
         fill: 255,
         size: 30,
       },
+      ...nextTetromino?.map((rows, y) => rows.reduce((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+        type: 'image',
+        position: { x: (x * 20) + 270, y: (y * 20) + 120 },
+        width: 20,
+        height: 20,
+        stroke: 0,
+        fill: getFillColor(cu),
+      }] : ar), [])).flat(),
       {
         type: 'text',
-        position: { x: 290, y: 250 },
+        position: { x: 300, y: 250 },
         value: 'score',
         fill: 255,
         size: 30,
       },
       {
         type: 'text',
-        position: { x: 290, y: 280 },
+        position: { x: 300, y: 280 },
         value: this.score.get(),
         fill: 255,
         size: 30,
@@ -219,10 +234,15 @@ export class ScenePlaying implements Scene {
         this.animationStatus = 'dropTetromino';
         this.end = false;
         this.isGameover = false;
+        nt.set(Math.trunc(Math.random() * 7));
+        this.nextTetromino = nt.get();
         break;
       case 'dropTetromino': {
+        // 次のtetrominoをセットする
         // tetrominoを選択し、drop開始する
-        at.start({ x: 4, y: 0, tetromino: Math.trunc(Math.random() * 7) });
+        at.start({ x: 4, y: 0, tetromino: this.nextTetromino.type });
+        nt.set(Math.trunc(Math.random() * 7));
+        this.nextTetromino = nt.get();
         this.animationStatus = 'droppingTetromino';
         this.tetrominoCollidedTimes = 0;
         break;
@@ -256,22 +276,24 @@ export class ScenePlaying implements Scene {
         this.animationCount += 1;
         break;
       }
-      case 'removeFullRow': {
-        // 消去
+      case 'updateField': {
+        // フィールドを更新する
+        f.update(at.getStatus());
+        at.clearTetromino();
+        this.animationStatus = f.canRemoveFullRow()
+          ? 'removeTetrominoInRow'
+          : 'dropTetromino';
+        break;
+      }
+      case 'removeTetrominoInRow': {
+        // フィールド内のtetromino消去
         if (this.animationCount > 30) {
+          this.score.add(f.getRemoveRows() * 1000);
           f.removeFullRow();
           this.animationStatus = 'dropTetromino';
           break;
         }
         this.animationCount += 1;
-        break;
-      }
-      case 'updateField': {
-        f.update(at.getStatus());
-        at.clearTetromino();
-        this.animationStatus = f.canRemoveFullRow()
-          ? 'removeFullRow'
-          : 'dropTetromino';
         break;
       }
       case 'gameover': {

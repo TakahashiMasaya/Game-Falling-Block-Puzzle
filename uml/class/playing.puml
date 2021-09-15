@@ -232,6 +232,7 @@ namespace Domain {
       + update({ x: number, y: number, tetromino: string[][] }): void
       + canRemoveFullRow(): boolean
       + removeFullRow(): void
+      + getRemoveRows(): nnumber
       + getStatus(): string[][]
     }
     FieldInterface <|-- Field10x20
@@ -248,6 +249,14 @@ namespace Domain {
       + setAction({left: boolean, right: boolean, down: boolean, spinLeft: boolean, spinRight: booelan }): void
       + getStatus(): { x: number, y: number, tetromino: string[][] }
     }
+
+    Class NextTetromino {
+      - type: number
+      - tetromino: string[][]
+      + set(number: number): void
+      + get(): { type: number, tetromino: string[][] }
+    }
+
     Interface InterfaceTetromino {
       - pieces: string[][]
       - spinStatus: number
@@ -285,6 +294,7 @@ namespace Domain {
       - pieces: [['0', 't', '0'], ['t', 't', 't'], ['0', '0', '0']]
     }
 
+    NextTetromino ---> Tetromino
     ActiveTetromino ---> Tetromino
     InterfaceTetromino <|-- Tetromino 
     Tetromino <|-- ITetromino
@@ -298,6 +308,7 @@ namespace Domain {
 
 }
 
+Application.Scene.ScenePlaying ---> Domain.Parts.NextTetromino
 Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
 Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
 Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface

@@ -110,6 +110,14 @@ export class Field10x20 implements FieldInterface {
   public canRemoveFullRow = (): boolean => this.field.some(this.isFullRow)
 
   /**
+   * 削除できる行ブロック数を取得する
+   *
+   * @memberof Field10x20
+   */
+  public getRemoveRows = (): number => this.field.map(this.isFullRow)
+    .filter((row) => row === true).length;
+
+  /**
    * 行のブロックを削除する
    *
    */
