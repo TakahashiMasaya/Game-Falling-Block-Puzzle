@@ -8,6 +8,7 @@
       "type": "pwa-chrome",
       "request": "launch",
       "name": "Launch Chrome against localhost",
+      "preLaunchTask": "tsc: build - tsconfig.json",
       "url": "http://localhost:8080",
       "webRoot": "${workspaceFolder}"
     }
