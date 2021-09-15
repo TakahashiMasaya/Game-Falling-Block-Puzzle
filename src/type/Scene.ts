@@ -3,6 +3,7 @@ export type Text = {
   position: string | { x: number, y: number };
   value: string
   size: number,
+  fill?: string | number | null,
 };
 
 export type Image = {
@@ -11,5 +12,5 @@ export type Image = {
   width: number
   height: number,
   stroke: number | null,
-  fill: number | null,
+  fill?: string | number | null,
 };

@@ -1,5 +1,16 @@
-import { InteractiveController } from '@/interactor/InteractiveController';
+import { TransferredController } from '@/application/TransferredController';
 import { InteractivePresenter } from '@/interactor/InteractivePresenter';
+import { Score } from '@/domain/parts/score/Score';
+
+export type TTransferredController = {
+  up: number,
+  right: number,
+  down: number,
+  left: number,
+  spinRight: number,
+  spinLeft: number,
+  enter: number,
+};
 
 export interface Scene {
   isEnd(): boolean;
@@ -8,8 +19,9 @@ export interface Scene {
 }
 
 export type paramScene = {
-  interactiveController: InteractiveController,
+  transferredController: TransferredController,
   interactivePresenter: InteractivePresenter,
+  score? : Score,
 }
 
 const DEFTetrominoID = {

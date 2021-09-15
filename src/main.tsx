@@ -1,3 +1,4 @@
+import { TransferredController } from '@/application/TransferredController';
 import { InteractiveController } from '@/interactor/InteractiveController';
 import { paramSetAction } from './type/Controllers';
 import { PC } from '@/controllers/PC';
@@ -7,6 +8,8 @@ import { SceneChangerP5 } from './application/scene/SceneChangerP5';
 import { SceneStart } from './application/scene/SceneStart';
 import { ScenePlaying } from './application/scene/ScenePlaying';
 import { SceneGameover } from './application/scene/SceneGameover';
+
+import { Score } from '@/domain/parts/score/Score';
 
 import './scss/index.scss';
 
@@ -34,16 +37,21 @@ const action: paramSetAction = {
 pc.setAction(action);
 sp.setAction(action);
 
-const s1 = new SceneStart({
+const tc = new TransferredController({
   interactiveController: ic,
+});
+
+const s1 = new SceneStart({
+  transferredController: tc,
   interactivePresenter: null,
 });
 const s2 = new ScenePlaying({
-  interactiveController: ic,
+  transferredController: tc,
   interactivePresenter: null,
+  score: new Score(),
 });
 const s3 = new SceneGameover({
-  interactiveController: ic,
+  transferredController: tc,
   interactivePresenter: null,
 });
 

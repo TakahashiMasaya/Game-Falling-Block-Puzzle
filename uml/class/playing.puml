@@ -114,36 +114,39 @@ namespace Application {
       + start(): void
     }
     class SceneStart{
-      - InteractiveController: InteractiveController
-      - InteractivePresenter: InteractivePresenter
+      - transferredController: TransferredController
+      - interactivePresenter: InteractivePresenter
       + start()
-      - move()
-      - draw()
+      + move()
+      + draw()
+      + isEnd()
     }
     class ScenePlaying{
       - tetrominoCollidedTimes: number
       - soundForBackground: string
       - soundForReachedTetromino: string
-      - status: 'ready'|'playing'
-      - InteractiveController: InteractiveController
+      - status: 'start'|'dropTetromino'|'droppingTetromino'|'removeFullRow'|'updateField'|'gameover'
+      - InteractiveController: TransferredController
       - InteractivePresenter: InteractivePresenter
+      - setDrawing(): void
+      - moveDropping(): void
+      - moveHorizontally(): void
       + start()
-      - move()
-      - draw()
+      + move()
+      + draw()
+      + isEnd()
     }
     class SceneGameover{
-      - InteractiveController: InteractiveController
-      - InteractivePresenter: InteractivePresenter
+      - transferredController: TransferredController
+      - interactivePresenter: InteractivePresenter
       + start()
-      - move()
-      - draw()
+      + move()
+      + draw()
+      + isEnd()
     }
     SceneInterface <|-- SceneStart
     SceneInterface <|-- ScenePlaying
     SceneInterface <|-- SceneGameover
-    SceneStart ---> InteractorForController.InteractiveController
-    ScenePlaying ---> InteractorForController.InteractiveController
-    SceneGameover ---> InteractorForController.InteractiveController
   }
 
     ' tetrominoとfieldで衝突判定をする
@@ -167,7 +170,22 @@ namespace Application {
     + next(): number
   }
 
+  ' コントローラーのステータスをアプリ用に変換する
+  class TransferredController {
+    - interactiveController: InteractiveController
+    - status: { left: number, right: number, down: number, spinRight: number, spinRight: number }
+    + getStatus(): { left: number, right: number, down: number, spinRight: number, spinRight: number }
+    + transfer(): void
+    + reset(): void
+  }
+
 }
+
+Application.TransferredController ---> InteractorForController.InteractiveController
+
+Application.Scene.SceneStart ---> Application.TransferredController
+Application.Scene.ScenePlaying ---> Application.TransferredController
+Application.Scene.SceneGameover ---> Application.TransferredController
 
 Application.Scene.Changer.SceneChangerP5 --> Application.Scene.SceneStart
 Application.Scene.ScenePlaying --> Application.NextTetrominos
@@ -204,6 +222,7 @@ namespace Domain {
     interface ScoreInterface {
       - score: number
       + add(number: number): void
+      + get(): number
       + reset(): void
     }
     class Score {}

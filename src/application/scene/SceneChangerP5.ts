@@ -41,13 +41,16 @@ export class SceneChangerP5 {
         const { type } = v;
         switch (type) {
           case 'text': {
-            const { size, position, value }: Text = v;
+            const {
+              size, position, value, fill,
+            }: Text = v;
             const pos = (typeof position === 'string') ? {
               x: p.windowWidth / 2,
               y: (p.windowHeight / 2) - (size / 2),
             } : position;
             p.textAlign('center');
             p.textSize(size);
+            if ((fill ?? true) !== true) p.fill(fill);
             p.text(value, pos.x, pos.y);
             break;
           }

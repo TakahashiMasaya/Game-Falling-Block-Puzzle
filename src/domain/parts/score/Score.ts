@@ -7,6 +7,8 @@ export class Score implements ScoreInterface {
     this.score += num;
   }
 
+  public get = () => this.score
+
   public reset = (): void => {
     this.score = 0;
   }

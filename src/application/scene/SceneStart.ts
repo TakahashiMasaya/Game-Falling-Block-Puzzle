@@ -1,10 +1,11 @@
 import { Scene, paramScene } from '@/type/Application';
-import { InteractiveController } from '@/interactor/InteractiveController';
+import { TransferredController } from '@/application/TransferredController';
 import { InteractivePresenter } from '@/interactor/InteractivePresenter';
+
 import { Text, Image } from '@/type/Scene';
 
 export class SceneStart implements Scene {
-  private interactiveController: InteractiveController;
+  private transferredController : TransferredController;
 
   private interactivePresenter: InteractivePresenter;
 
@@ -13,18 +14,19 @@ export class SceneStart implements Scene {
   private drawing: (Text | Image)[] = [];
 
   constructor({
-    interactiveController,
+    transferredController,
     interactivePresenter,
   }: paramScene) {
-    this.interactiveController = interactiveController;
+    this.transferredController = transferredController;
     this.interactivePresenter = interactivePresenter;
   }
 
   public move = () => {
-    const { enter } = this.interactiveController.keyStatus();
+    this.transferredController.transfer();
+    const { enter } = this.transferredController.getStatus();
     if (enter) {
       this.end = true;
-      this.interactiveController.reset();
+      this.transferredController.reset();
       return;
     }
 

@@ -1,9 +1,9 @@
 import { Scene, paramScene } from '@/type/Application';
-import { InteractiveController } from '@/interactor/InteractiveController';
+import { TransferredController } from '@/application/TransferredController';
 import { InteractivePresenter } from '@/interactor/InteractivePresenter';
 
 export class SceneGameover implements Scene {
-  private interactiveController: InteractiveController;
+  private transferredController : TransferredController;
 
   private interactivePresenter: InteractivePresenter;
 
@@ -12,18 +12,19 @@ export class SceneGameover implements Scene {
   private drawing: any[] = [];
 
   constructor({
-    interactiveController,
+    transferredController,
     interactivePresenter,
   }: paramScene) {
-    this.interactiveController = interactiveController;
+    this.transferredController = transferredController;
     this.interactivePresenter = interactivePresenter;
   }
 
   public move = () => {
-    const { enter } = this.interactiveController.keyStatus();
+    this.transferredController.transfer();
+    const { enter } = this.transferredController.getStatus();
     if (enter) {
       this.end = true;
-      this.interactiveController.reset();
+      this.transferredController.reset();
       return;
     }
 

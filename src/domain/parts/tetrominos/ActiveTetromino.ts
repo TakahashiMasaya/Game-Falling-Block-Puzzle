@@ -45,11 +45,18 @@ export class ActiveTetromino {
     };
   }
 
+  /**
+   * 引数に合わせて次のTetrominoの位置、状態を取得する
+   *
+   * @param {paramUserControllingTetromino} {
+   *     left, right, down, spinLeft, spinRight,
+   *   }
+   * @memberof ActiveTetromino
+   */
   public nextAction = ({
     left, right, down, spinLeft, spinRight,
   }: paramUserControllingTetromino): ActiveTetrominoStatus => {
     let { x, y, tetromino } = this.status;
-    y += 1;
     x = (left) ? x - 1 : x;
     x = (right) ? x + 1 : x;
     y = (down) ? y + 1 : y;
@@ -60,6 +67,14 @@ export class ActiveTetromino {
     };
   }
 
+  /**
+   * 引数にあわせて、Tetrominoの位置、状態を設定する
+   *
+   * @param {paramUserControllingTetromino} {
+   *     left, right, down, spinLeft, spinRight,
+   *   }
+   * @memberof ActiveTetromino
+   */
   public setAction = ({
     left, right, down, spinLeft, spinRight,
   }: paramUserControllingTetromino): void => {
@@ -75,6 +90,11 @@ export class ActiveTetromino {
     };
   }
 
+  /**
+   * Tetrominoを下に位置する
+   *
+   * @memberof ActiveTetromino
+   */
   public setDropping = (): void => {
     const { y } = this.status;
     this.status = {
@@ -83,5 +103,22 @@ export class ActiveTetromino {
     };
   }
 
+  /**
+   * Tetrominoの中身をクリアする
+   *
+   * @memberof ActiveTetromino
+   */
+  public clearTetromino = (): void => {
+    this.status = {
+      ...this.status,
+      tetromino: [],
+    };
+  }
+
+  /**
+   * Tetrominoの位置、状態を取得
+   *
+   * @memberof ActiveTetromino
+   */
   public getStatus = (): ActiveTetrominoStatus => this.status;
 }

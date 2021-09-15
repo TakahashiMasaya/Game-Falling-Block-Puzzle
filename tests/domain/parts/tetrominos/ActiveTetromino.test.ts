@@ -40,7 +40,7 @@ describe('ActiveTetromino', () => {
       const { x, y, tetromino } = at.getStatus();
       expect(x).toEqual(4);
       expect(y).toEqual(0);
-      expect(tetromino).toEqual(expect.arrayContaining([['0', 's', 's'], ['s', 's', '0'], ['0', '0', '0']]));
+      expect(tetromino).toEqual(expect.arrayContaining([['0', 's', 's'], ['s', 's', '0'], ['0', '0', '0']]));
     });
     it('パラメータによる指定パーツ(TTetromino)が正しいこと', () => {
       const at = new ActiveTetromino();
@@ -71,7 +71,7 @@ describe('ActiveTetromino', () => {
         spinRight: false,
       });
       expect(x).toEqual(3);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0']]));
     });
 
@@ -86,7 +86,7 @@ describe('ActiveTetromino', () => {
         spinRight: false,
       });
       expect(x).toEqual(5);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0']]));
     });
 
@@ -101,7 +101,7 @@ describe('ActiveTetromino', () => {
         spinRight: false,
       });
       expect(x).toEqual(4);
-      expect(y).toEqual(2);
+      expect(y).toEqual(1);
       expect(tetromino).toEqual(expect.arrayContaining([['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0'], ['0', 'i', '0', '0']]));
     });
 
@@ -116,7 +116,7 @@ describe('ActiveTetromino', () => {
         spinRight: false,
       });
       expect(x).toEqual(4);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', '0', '0', '0'], ['0', '0', '0', '0'], ['i', 'i', 'i', 'i'], ['0', '0', '0', '0']]));
     });
 
@@ -131,7 +131,7 @@ describe('ActiveTetromino', () => {
         spinRight: false,
       });
       expect(x).toEqual(4);
-      expect(y).toEqual(1);
+      expect(y).toEqual(0);
       expect(tetromino).toEqual(expect.arrayContaining([['0', '0', '0', '0'], ['i', 'i', 'i', 'i'], ['0', '0', '0', '0'], ['0', '0', '0', '0']]));
     });
   });
