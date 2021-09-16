@@ -37,12 +37,12 @@ export class NextTetromino {
         this.tetromino = new ZTetromino();
         break;
       default:
-        this.tetromino = null;
+        this.tetromino = new ITetromino();
     }
   }
 
   get = () => ({
     type: this.type,
-    tetromino: this.tetromino.getPiece(),
+    tetromino: this.tetromino?.getPiece() || [[]],
   })
 }

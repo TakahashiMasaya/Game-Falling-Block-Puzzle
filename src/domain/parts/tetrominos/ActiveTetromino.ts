@@ -11,7 +11,7 @@ import { ZTetromino } from './ZTetromino';
 export class ActiveTetromino {
   private tetromino: TypeTetromino | null = null;
 
-  private status: ActiveTetrominoStatus = null;
+  private status: ActiveTetrominoStatus | null = null;
 
   public start = ({ x, y, tetromino }: paramStartTetrominos): void => {
     switch (tetromino) {
@@ -56,12 +56,13 @@ export class ActiveTetromino {
   public nextAction = ({
     left, right, down, spinLeft, spinRight,
   }: paramUserControllingTetromino): ActiveTetrominoStatus => {
+    if (!this.status) { return { x: 0, y: 0, tetromino: [[]] }; }
     let { x, y, tetromino } = this.status;
     x = (left) ? x - 1 : x;
     x = (right) ? x + 1 : x;
     y = (down) ? y + 1 : y;
-    tetromino = (spinLeft) ? this.tetromino.getPieceToSpinLeft() : tetromino;
-    tetromino = (spinRight) ? this.tetromino.getPieceToSpinRight() : tetromino;
+    tetromino = (spinLeft && this.tetromino) ? this.tetromino.getPieceToSpinLeft() : tetromino;
+    tetromino = (spinRight && this.tetromino) ? this.tetromino.getPieceToSpinRight() : tetromino;
     return {
       x, y, tetromino,
     };
@@ -78,13 +79,14 @@ export class ActiveTetromino {
   public setAction = ({
     left, right, down, spinLeft, spinRight,
   }: paramUserControllingTetromino): void => {
+    if (!this.status) { return; }
     let { x, y, tetromino } = this.status;
     x = (left) ? x - 1 : x;
     x = (right) ? x + 1 : x;
     y = (down) ? y + 1 : y;
-    if (spinLeft) this.tetromino.spinLeft();
-    if (spinRight) this.tetromino.spinRight();
-    tetromino = this.tetromino.getPiece();
+    if (spinLeft) this.tetromino?.spinLeft();
+    if (spinRight) this.tetromino?.spinRight();
+    tetromino = this.tetromino?.getPiece() || tetromino;
     this.status = {
       x, y, tetromino,
     };
@@ -96,6 +98,7 @@ export class ActiveTetromino {
    * @memberof ActiveTetromino
    */
   public setDropping = (): void => {
+    if (!this.status) { return; }
     const { y } = this.status;
     this.status = {
       ...this.status,
@@ -109,6 +112,7 @@ export class ActiveTetromino {
    * @memberof ActiveTetromino
    */
   public clearTetromino = (): void => {
+    if (!this.status) { return; }
     this.status = {
       ...this.status,
       tetromino: [],
@@ -120,5 +124,5 @@ export class ActiveTetromino {
    *
    * @memberof ActiveTetromino
    */
-  public getStatus = (): ActiveTetrominoStatus => this.status;
+  public getStatus = (): ActiveTetrominoStatus => this.status || { x: 0, y: 0, tetromino: [[]] };
 }

@@ -3,8 +3,8 @@ import { InteractiveController } from '@/interactor/InteractiveController';
 
 describe('TransferredController', () => {
   describe('各種ボタンのステータス確認', () => {
-    let ic = null;
-    let tc = null;
+    let ic: InteractiveController;
+    let tc: TransferredController;
     beforeEach(() => {
       ic = new InteractiveController();
       tc = new TransferredController({
@@ -97,8 +97,8 @@ describe('TransferredController', () => {
   });
 
   describe('連射・単射確認', () => {
-    let ic = null;
-    let tc = null;
+    let ic: InteractiveController;
+    let tc: TransferredController;
     beforeEach(() => {
       ic = new InteractiveController();
       tc = new TransferredController({

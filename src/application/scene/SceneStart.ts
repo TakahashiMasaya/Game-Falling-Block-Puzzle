@@ -1,13 +1,13 @@
-import { Scene, paramScene } from '@/type/Application';
+import { paramScene } from '@/type/Application';
 import { TransferredController } from '@/application/TransferredController';
 import { InteractivePresenter } from '@/interactor/InteractivePresenter';
 
-import { Text, Image } from '@/type/Scene';
+import { Scene, Text, Image } from '@/type/Scene';
 
 export class SceneStart implements Scene {
   private transferredController : TransferredController;
 
-  private interactivePresenter: InteractivePresenter;
+  private interactivePresenter?: InteractivePresenter;
 
   private end: boolean = false;
 
@@ -20,6 +20,8 @@ export class SceneStart implements Scene {
     this.transferredController = transferredController;
     this.interactivePresenter = interactivePresenter;
   }
+
+  public start = () => {}
 
   public move = () => {
     this.transferredController.transfer();

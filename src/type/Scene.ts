@@ -1,9 +1,16 @@
+export interface Scene {
+  isEnd(): boolean;
+  start(): void;
+  move(): void;
+  draw(): any;
+}
+
 export type Text = {
   type: 'text';
   position: string | { x: number, y: number };
-  value: string
-  size: number,
-  fill?: string | number | null,
+  value?: string;
+  size: number;
+  fill?: string | number | null;
 };
 
 export type Image = {

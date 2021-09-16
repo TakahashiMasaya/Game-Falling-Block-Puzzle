@@ -1,7 +1,7 @@
 import { paramNextTetrominos } from '@/type/Application';
 
 export class NextTetrominos {
-  private list: number[] | null;
+  private list: number[] = [];
 
   private stockQuantity: number;
 

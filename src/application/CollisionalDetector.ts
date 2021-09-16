@@ -14,7 +14,7 @@ export class CollisionalDetector {
   private isFieldCollision = ({
     tetromino,
     field,
-  }): boolean => {
+  }: paramIsCollision): boolean => {
     const { x, y, tetromino: t }: ActiveTetrominoStatus = tetromino;
     // tetrominoの各bit値で衝突判定する
     for (let i = 0; i < t.length; i += 1) {

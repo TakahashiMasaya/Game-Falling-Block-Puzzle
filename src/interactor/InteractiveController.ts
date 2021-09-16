@@ -15,7 +15,7 @@ export class InteractiveController {
 
   public reset = (): void => {
     Object.keys(this.status).forEach((key) => {
-      this.status[key] = false;
+      this.status[key as keyof TInteractiveController] = false;
     });
   }
 

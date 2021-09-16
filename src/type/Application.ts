@@ -12,15 +12,9 @@ export type TTransferredController = {
   enter: number,
 };
 
-export interface Scene {
-  isEnd(): boolean;
-  move(): void;
-  draw();
-}
-
 export type paramScene = {
   transferredController: TransferredController,
-  interactivePresenter: InteractivePresenter,
+  interactivePresenter? : InteractivePresenter,
   score? : Score,
 }
 
@@ -50,7 +44,7 @@ export type ActiveTetrominoStatus = {
   x: number,
   y: number,
   tetromino: string[][],
-} | null;
+};
 
 export type paramUserControllingTetromino = {
   left: boolean;

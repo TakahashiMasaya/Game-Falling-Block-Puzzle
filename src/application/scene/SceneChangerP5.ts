@@ -1,22 +1,23 @@
 /* eslint-disable no-new */
 /* eslint-disable new-cap */
 /* eslint-disable no-param-reassign */
-import p5 from 'p5/lib/p5.min';
-import { Scene } from '@/type/Application';
-
-import { Image, Text } from '@/type/Scene';
+import p5 from 'p5';
+import { Scene, Image, Text } from '@/type/Scene';
 
 export class SceneChangerP5 {
-  private list: any;
+  private list: Scene[];
 
-  private canvasElement: HTMLCanvasElement | null = null;
+  private canvasElement: HTMLElement | null = null;
 
   constructor({
     list,
     canvasElement,
+  }: {
+    list: Scene[],
+    canvasElement: HTMLElement | null,
   }) {
     this.list = list;
-    this.canvasElement = canvasElement || null;
+    this.canvasElement = canvasElement;
   }
 
   * sceneList() {
@@ -27,7 +28,8 @@ export class SceneChangerP5 {
 
   private sketch = (p: p5) => {
     let scene = this.sceneList();
-    let s: Scene = scene.next().value;
+    // TODO: Scene | void voidにしない方法が見つからない
+    let s: any = scene.next().value;
     p.setup = () => {
       p.createCanvas(p.windowWidth, p.windowHeight);
     };
@@ -37,7 +39,7 @@ export class SceneChangerP5 {
       p.fill(255);
       s.move();
 
-      s.draw().forEach((v) => {
+      s.draw().forEach((v: any) => {
         const { type } = v;
         switch (type) {
           case 'text': {
@@ -50,8 +52,8 @@ export class SceneChangerP5 {
             } : position;
             p.textAlign('center');
             p.textSize(size);
-            if ((fill ?? true) !== true) p.fill(fill);
-            p.text(value, pos.x, pos.y);
+            if ((fill ?? true) !== true) p.fill(fill as any);
+            p.text(value as any, pos.x, pos.y);
             break;
           }
           case 'image': {
@@ -64,8 +66,8 @@ export class SceneChangerP5 {
             const {
               x, y,
             } = position;
-            if ((stroke ?? true) !== true) p.stroke(stroke);
-            if ((fill ?? true) !== true) p.fill(fill);
+            if ((stroke ?? true) !== true) p.stroke(stroke as any);
+            if ((fill ?? true) !== true) p.fill(fill as any);
             p.rect(x, y, width, height);
             break;
           }
@@ -85,6 +87,6 @@ export class SceneChangerP5 {
   };
 
   public start = () => {
-    new p5(this.sketch, this.canvasElement);
+    new p5(this.sketch, this.canvasElement || undefined);
   }
 }

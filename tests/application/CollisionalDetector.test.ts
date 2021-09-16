@@ -2,10 +2,11 @@ import { ActiveTetromino } from '@/domain/parts/tetrominos/ActiveTetromino';
 import { Field10x20 } from '@/domain/parts/field/Field10x20';
 import { CollisionalDetector } from '@/application/CollisionalDetector';
 
+type tct = CollisionalDetector | null;
 describe('CollisionalDetector', () => {
   describe('fieldの衝突確認', () => {
     describe('左衝突確認', () => {
-      let ct = null;
+      let ct: tct = null;
       const field = [
         ['1', '0', '0', '0', '0', '1'],
         ['1', '0', '0', '0', '0', '1'],
@@ -76,7 +77,7 @@ describe('CollisionalDetector', () => {
       });
     });
     describe('右衝突確認', () => {
-      let ct = null;
+      let ct: tct = null;
       const field = [
         ['1', '0', '0', '0', '0', '1'],
         ['1', '0', '0', '0', '0', '1'],
@@ -114,7 +115,7 @@ describe('CollisionalDetector', () => {
       });
     });
     describe('下衝突確認', () => {
-      let ct = null;
+      let ct: tct = null;
       const field = [
         ['1', '0', '0', '0', '0', '1'],
         ['1', '0', '0', '0', '0', '1'],
@@ -176,7 +177,7 @@ describe('CollisionalDetector', () => {
   });
 
   describe('pieceによる衝突確認', () => {
-    let ct = null;
+    let ct: tct = null;
     const field = [
       ['0', '0', '0', '0', '0', '0'],
       ['0', 'j', '0', '0', 'j', '0'],
@@ -447,7 +448,7 @@ describe('CollisionalDetector', () => {
   });
 
   describe('フィールドにブロックが存在している状態からの衝突判定', () => {
-    let field = [];
+    let field: string[][] = [];
     beforeEach(() => {
       field = [
         ['1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1'],

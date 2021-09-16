@@ -21,7 +21,7 @@ export class TransferredController {
     enter: 0,
   };
 
-  constructor({ interactiveController }) {
+  constructor({ interactiveController }: { interactiveController: InteractiveController}) {
     this.interactiveController = interactiveController;
   }
 
@@ -82,6 +82,6 @@ export class TransferredController {
       spinLeft: 0,
       enter: 0,
     };
-    this.interactiveController.reset();
+    this.interactiveController?.reset();
   }
 }

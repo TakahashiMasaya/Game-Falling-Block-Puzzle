@@ -43,16 +43,13 @@ const tc = new TransferredController({
 
 const s1 = new SceneStart({
   transferredController: tc,
-  interactivePresenter: null,
 });
 const s2 = new ScenePlaying({
   transferredController: tc,
-  interactivePresenter: null,
   score: new Score(),
 });
 const s3 = new SceneGameover({
   transferredController: tc,
-  interactivePresenter: null,
 });
 
 const sc = new SceneChangerP5({

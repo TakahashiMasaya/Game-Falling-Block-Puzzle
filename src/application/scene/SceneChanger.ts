@@ -1,13 +1,15 @@
+import { Scene } from '@/type/Scene';
+
 export class SceneChanger {
   private list: any;
 
   private listNum: number = 0;
 
-  private scene: any;
+  private scene: Scene;
 
   constructor({
     list,
-  }) {
+  }: { list: Scene[] }) {
     this.list = list;
     this.scene = this.list[this.listNum];
   }

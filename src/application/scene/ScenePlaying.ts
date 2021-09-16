@@ -1,5 +1,6 @@
-import { Scene, paramScene } from '@/type/Application';
-import { Text, Image } from '@/type/Scene';
+import { paramScene } from '@/type/Application';
+import { Scene, Text, Image } from '@/type/Scene';
+import { Piece } from '@/type/Piece';
 import { TransferredController } from '@/application/TransferredController';
 import { InteractivePresenter } from '@/interactor/InteractivePresenter';
 import { Score } from '@/domain/parts/score/Score';
@@ -25,9 +26,9 @@ type typeControllButtons = {
 export class ScenePlaying implements Scene {
   private transferredController : TransferredController;
 
-  private interactivePresenter: InteractivePresenter;
+  private interactivePresenter?: InteractivePresenter;
 
-  private score: Score;
+  private score?: Score;
 
   private end: boolean = false;
 
@@ -42,8 +43,8 @@ export class ScenePlaying implements Scene {
   private isGameover: boolean = false;
 
   private nextTetromino: {
-    type: number, tetromino: (string[][] | null)
-  } = { type: 0, tetromino: null };
+    type: number, tetromino: Piece
+  } = { type: 0, tetromino: [[]] };
 
   private transferredControllerStatus: typeControllButtons = {
     left: 0,
@@ -70,9 +71,8 @@ export class ScenePlaying implements Scene {
    * @memberof ScenePlaying
    */
   private setDrawing = () => {
-    if (at.getStatus() === null) { return; }
-    const { x: fx, y: fy, tetromino } = at.getStatus();
-    const getFillColor = (num) => {
+    const { x: fx, y: fy, tetromino } = at.getStatus() || { x: 0, y: 0, tetromino: [[]] };
+    const getFillColor = (num: string) => {
       switch (num) {
         case '1':
           return '#444444';
@@ -97,7 +97,7 @@ export class ScenePlaying implements Scene {
 
     const { tetromino: nextTetromino } = this.nextTetromino;
     // fieldを表示
-    this.drawing = f.getStatus()?.map((rows, y) => rows.reduce((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+    this.drawing = f.getStatus()?.map((rows: string[], y) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
       type: 'image',
       position: { x: x * 20 + 30, y: y * 20 + 50 },
       width: 20,
@@ -108,7 +108,7 @@ export class ScenePlaying implements Scene {
     // Tetrominoを表示
     this.drawing = [
       ...this.drawing,
-      ...tetromino?.map((rows, y) => rows.reduce((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+      ...tetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
         type: 'image',
         position: { x: (x * 20) + 30 + (fx * 20), y: (y * 20) + 50 + (fy * 20) },
         width: 20,
@@ -123,7 +123,7 @@ export class ScenePlaying implements Scene {
         fill: 255,
         size: 30,
       },
-      ...nextTetromino?.map((rows, y) => rows.reduce((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+      ...nextTetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
         type: 'image',
         position: { x: (x * 20) + 270, y: (y * 20) + 120 },
         width: 20,
@@ -141,7 +141,7 @@ export class ScenePlaying implements Scene {
       {
         type: 'text',
         position: { x: 300, y: 280 },
-        value: this.score.get(),
+        value: this.score?.get().toString(),
         fill: 255,
         size: 30,
       },
@@ -159,7 +159,7 @@ export class ScenePlaying implements Scene {
     const {
       down,
     } = this.transferredController.getStatus();
-    if (down) { this.score.add(10); }
+    if (down) { this.score?.add(10); }
 
     if (cd.isCollision({
       tetromino: at.nextAction({
@@ -223,13 +223,15 @@ export class ScenePlaying implements Scene {
     });
   }
 
+  public start = () => {}
+
   public move = () => {
     this.drawing = [];
     this.transferredController.transfer();
     switch (this.animationStatus) {
       case 'start':
         f.init();
-        this.score.reset();
+        this.score?.reset();
         this.animationCount = 0;
         this.animationStatus = 'dropTetromino';
         this.end = false;
@@ -288,7 +290,7 @@ export class ScenePlaying implements Scene {
       case 'removeTetrominoInRow': {
         // フィールド内のtetromino消去
         if (this.animationCount > 30) {
-          this.score.add(f.getRemoveRows() * 1000);
+          this.score?.add(f.getRemoveRows() * 1000);
           f.removeFullRow();
           this.animationStatus = 'dropTetromino';
           break;

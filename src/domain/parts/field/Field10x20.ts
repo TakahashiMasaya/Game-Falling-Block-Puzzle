@@ -1,4 +1,5 @@
 import { Field as FieldInterface } from '@/type/Field';
+import { Piece } from '@/type/Piece';
 import { ActiveTetrominoStatus } from '@/type/Application';
 
 export class Field10x20 implements FieldInterface {
@@ -126,7 +127,7 @@ export class Field10x20 implements FieldInterface {
     const fullRows: number = this.field.map(this.isFullRow).filter((row) => row === true).length;
     // 行がfullの状態を削除する
     this.field = this.field
-      .reduce((ar: string[][], cu: string[]) => (this.isFullRow(cu) ? ar : [...ar, cu]), []);
+      .reduce((ar: Piece, cu: string[]) => (this.isFullRow(cu) ? ar : [...ar, cu]), []);
 
     this.field = [
       ...[...new Array<string[]>(fullRows)].map(() => ['1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1']),
@@ -139,5 +140,5 @@ export class Field10x20 implements FieldInterface {
    *
    * @memberof Field10x20
    */
-  public getStatus = (): string[][] => this.field;
+  public getStatus = (): Piece => this.field;
 }
