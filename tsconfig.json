@@ -3,7 +3,7 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "strict": false,
+    "strict": true,
     // TSはECMAScript 5に変換
     "target": "ES5",
     // TSのモジュールはES Modulesとして出力
