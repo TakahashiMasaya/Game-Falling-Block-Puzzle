@@ -30,6 +30,8 @@ export class ScenePlaying implements Scene {
 
   private score?: Score;
 
+  private removeLines: number = 0;
+
   private end: boolean = false;
 
   private drawing: (Text | Image)[] = [];
@@ -145,6 +147,20 @@ export class ScenePlaying implements Scene {
         fill: 255,
         size: 30,
       },
+      {
+        type: 'text',
+        position: { x: 300, y: 350 },
+        value: 'Lines',
+        fill: 255,
+        size: 30,
+      },
+      {
+        type: 'text',
+        position: { x: 300, y: 380 },
+        value: this.removeLines.toString(),
+        fill: 255,
+        size: 30,
+      },
     ];
   }
 
@@ -234,6 +250,7 @@ export class ScenePlaying implements Scene {
         this.score?.reset();
         this.animationCount = 0;
         this.animationStatus = 'dropTetromino';
+        this.removeLines = 0;
         this.end = false;
         this.isGameover = false;
         nt.set(Math.trunc(Math.random() * 7));
@@ -264,7 +281,9 @@ export class ScenePlaying implements Scene {
           break;
         }
 
-        if (this.animationCount % 10 === 0) {
+        // 消去した数に併せて、tetorminoのスピードを上げる
+        const delayCount: number = Math.trunc(this.removeLines / 5);
+        if (this.animationCount % (10 - (delayCount > 9 ? 9 : delayCount)) === 0) {
           // 自動落下
           this.moveDropping(true);
         }
@@ -291,6 +310,7 @@ export class ScenePlaying implements Scene {
         // フィールド内のtetromino消去
         if (this.animationCount > 30) {
           this.score?.add(f.getRemoveRows() * 1000);
+          this.removeLines += f.getRemoveRows();
           f.removeFullRow();
           this.animationStatus = 'dropTetromino';
           break;
