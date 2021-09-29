@@ -1,10 +1,12 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const MODE = 'production';
 const MODE = 'development';
 const enabledSourceMap = MODE === 'development';
 
 module.exports = {
   // モード値を production に設定すると最適化された状態で、
   // development に設定するとソースマップ有効でJSファイルが出力される
-  mode: 'development',
+  mode: MODE,
 
   // メインとなるJavaScriptファイル（エントリーポイント）
   entry: './src/main.tsx',
@@ -19,6 +21,12 @@ module.exports = {
     static: './dist',
     open: true,
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: `${__dirname}/src/html/index.html`,
+      filename: 'index.html',
+    }),
+  ],
   module: {
     rules: [
       {
