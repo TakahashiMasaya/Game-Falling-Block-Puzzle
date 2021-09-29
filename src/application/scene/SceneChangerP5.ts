@@ -3,7 +3,12 @@
 /* eslint-disable no-param-reassign */
 import p5 from 'p5';
 import { Scene, Image, Text } from '@/type/Scene';
+import { paramSetAction, TBtPositions, TBtIndex } from '@/type/Controllers';
 import { InteractiveController } from '@/interactor/InteractiveController';
+import { TransferredScreen } from '@/application/TransferredScreen';
+import { PC } from '@/controllers/p5/PC';
+import { SP } from '@/controllers/p5/SP';
+import { P5 } from '@/presenters/screen/P5';
 
 export class SceneChangerP5 {
   private list: Scene[];
@@ -11,6 +16,10 @@ export class SceneChangerP5 {
   private canvasElement: HTMLElement | null = null;
 
   private interactiveController: InteractiveController;
+
+  private isPlaying: boolean = false;
+
+  private transferredScreen: TransferredScreen | null = null;
 
   constructor({
     list,
@@ -37,100 +46,131 @@ export class SceneChangerP5 {
     // TODO: Scene | void voidにしない方法が見つからない
     let s: any = scene.next().value;
 
-    const up = p.createButton('UP');
-    up.position(68, 500);
-    const left = p.createButton('LEFT');
-    left.position(20, 540);
-    const right = p.createButton('RIGHT');
-    right.position(100, 540);
-    const down = p.createButton('DOWN');
-    down.position(58, 580);
+    this.transferredScreen = new TransferredScreen({
+      window: {
+        width: p.windowWidth,
+        height: p.windowHeight,
+      },
+      screen: {
+        width: 400,
+        height: 600,
+      },
+      horizonalAlign: 'center',
+      verticalAlign: 'center',
+    });
+    const buttons = new P5(p);
+    const pc = new PC(p);
+    const sp = new SP(p);
 
-    const spinLeft = p.createButton('SPINLEFT');
-    spinLeft.position(180, 520);
-    const spinRight = p.createButton('SPINRIGHT');
-    spinRight.position(270, 520);
+    const btPositions = {
+      up: {
+        x: 80, y: 450, width: 50, height: 50,
+      },
+      left: {
+        x: 40, y: 490, width: 50, height: 50,
+      },
+      right: {
+        x: 120, y: 490, width: 50, height: 50,
+      },
+      down: {
+        x: 80, y: 530, width: 50, height: 50,
+      },
+      spinLeft: {
+        x: 220, y: 470, width: 50, height: 50,
+      },
+      spinRight: {
+        x: 310, y: 470, width: 50, height: 50,
+      },
+      enter: {
+        x: 265, y: 510, width: 50, height: 50,
+      },
+    };
 
-    const enter = p.createButton('ENTER');
-    enter.position(230, 560);
+    const resizeButtons = () => {
+      const adjustButtons: TBtPositions = Object.keys(btPositions)
+        .reduce<TBtPositions>((ar: TBtPositions, cu: string) => {
+          const {
+            x: px, y: py, width: pw, height: ph,
+          } = btPositions[cu as TBtIndex];
+          const {
+            x, y, width, height,
+          } = this.transferredScreen?.transfer({
+            x: px,
+            y: py,
+            width: pw,
+            height: ph,
+          }) || {
+            x: 0, y: 0, width: 0, height: 0,
+          };
+          return {
+            ...ar,
+            [cu]: {
+              x, y, width, height,
+            },
+          };
+        }, btPositions);
+      buttons.adjustButtons(adjustButtons);
+    };
 
+    const resizeWindow = () => {
+      p.resizeCanvas(p.windowWidth, p.windowHeight);
+      this.transferredScreen?.resizeWindow({
+        width: p.windowWidth,
+        height: p.windowHeight,
+      });
+      resizeButtons();
+    };
+
+    const action: paramSetAction = {
+      action: {
+        up: this.interactiveController.up,
+        down: this.interactiveController.down,
+        left: this.interactiveController.left,
+        right: this.interactiveController.right,
+        spinRight: this.interactiveController.spinRight,
+        spinLeft: this.interactiveController.spinLeft,
+        enter: this.interactiveController.enter,
+        offUp: this.interactiveController.offUp,
+        offDown: this.interactiveController.offDown,
+        offLeft: this.interactiveController.offLeft,
+        offRight: this.interactiveController.offRight,
+        offSpinRight: this.interactiveController.offSpinRight,
+        offSpinLeft: this.interactiveController.offSpinLeft,
+        offEnter: () => {
+          this.interactiveController.offEnter();
+          resizeWindow();
+          if (s.constructor.name !== 'ScenePlaying') { return; }
+          if (this.isPlaying) {
+            p.noLoop();
+            this.isPlaying = false;
+          } else {
+            p.loop();
+            this.isPlaying = true;
+          }
+        },
+      },
+    };
+
+    pc.setAction({
+      ...action,
+    });
+    sp.setAction({
+      buttons: buttons.getButtons(),
+      ...action,
+    });
+
+    // TODO: ボタン系は暫定
     p.setup = () => {
       p.createCanvas(p.windowWidth, p.windowHeight);
+      resizeButtons();
+    };
 
-      up.touchStarted(this.interactiveController.up);
-      up.touchEnded(this.interactiveController.offUp);
-      left.touchStarted(this.interactiveController.left);
-      left.touchEnded(this.interactiveController.offLeft);
-      right.touchStarted(this.interactiveController.right);
-      right.touchEnded(this.interactiveController.offRight);
-      down.touchStarted(this.interactiveController.down);
-      down.touchEnded(this.interactiveController.offDown);
-      spinLeft.touchStarted(this.interactiveController.spinLeft);
-      spinLeft.touchEnded(this.interactiveController.offSpinLeft);
-      spinRight.touchStarted(this.interactiveController.spinRight);
-      spinRight.touchEnded(this.interactiveController.offSpinRight);
-      enter.touchStarted(this.interactiveController.enter);
-      enter.touchEnded(this.interactiveController.offEnter);
-    };
-    p.keyPressed = () => {
-      switch (p.keyCode) {
-        case p.UP_ARROW:
-          this.interactiveController.up();
-          break;
-        case p.LEFT_ARROW:
-          this.interactiveController.left();
-          break;
-        case p.RIGHT_ARROW:
-          this.interactiveController.right();
-          break;
-        case p.DOWN_ARROW:
-          this.interactiveController.down();
-          break;
-        case 90: // Z
-          this.interactiveController.spinLeft();
-          break;
-        case 88: // X
-          this.interactiveController.spinRight();
-          break;
-        case 32: // Space
-          this.interactiveController.enter();
-          break;
-        default:
-      }
-      return false;
-    };
-    p.keyReleased = () => {
-      switch (p.keyCode) {
-        case p.UP_ARROW:
-          this.interactiveController.offUp();
-          break;
-        case p.LEFT_ARROW:
-          this.interactiveController.offLeft();
-          break;
-        case p.RIGHT_ARROW:
-          this.interactiveController.offRight();
-          break;
-        case p.DOWN_ARROW:
-          this.interactiveController.offDown();
-          break;
-        case 90: // Z
-          this.interactiveController.offSpinLeft();
-          break;
-        case 88: // X
-          this.interactiveController.offSpinRight();
-          break;
-        case 32: // Space
-          this.interactiveController.offEnter();
-          break;
-        default:
-      }
-      return false;
-    };
+    p.windowResized = () => resizeWindow();
+
     p.draw = () => {
       p.background('#0f2350');
       p.noStroke();
       p.fill(255);
-      // el.touchStarted((e: any) => console.log(e));
       s.move();
 
       s.draw().forEach((v: any) => {
@@ -138,16 +178,26 @@ export class SceneChangerP5 {
         switch (type) {
           case 'text': {
             const {
-              size, position, value, fill,
+              width, height, position, value, fill,
             }: Text = v;
             const pos = (typeof position === 'string') ? {
-              x: p.windowWidth / 2,
-              y: (p.windowHeight / 2) - (size / 2),
+              x: 400 / 2,
+              y: (600 / 2) - (height / 2),
+              width,
+              height,
             } : position;
+
+            const {
+              x: tx, y: ty, width: tw,
+            } = this.transferredScreen?.transfer({
+              x: pos.x, y: pos.y, width, height,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
             p.textAlign('center');
-            p.textSize(size);
+            p.textSize(tw);
             if ((fill ?? true) !== true) p.fill(fill as any);
-            p.text(value as any, pos.x, pos.y);
+            p.text(value as any, tx, ty);
             break;
           }
           case 'image': {
@@ -160,9 +210,16 @@ export class SceneChangerP5 {
             const {
               x, y,
             } = position;
+            const {
+              x: tx, y: ty, width: tw, height: th,
+            } = this.transferredScreen?.transfer({
+              x, y, width, height,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
             if ((stroke ?? true) !== true) p.stroke(stroke?.toString() || '');
             if ((fill ?? true) !== true) p.fill(fill?.toString() || '');
-            p.rect(x, y, width, height);
+            p.rect(tx, ty, tw, th);
             break;
           }
           default:

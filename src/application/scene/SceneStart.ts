@@ -36,8 +36,9 @@ export class SceneStart implements Scene {
     this.drawing = [{
       type: 'text',
       position: 'center',
-      value: 'Press Start',
-      size: 30,
+      value: 'Press Enter',
+      width: 30,
+      height: 30,
     }];
   }
 

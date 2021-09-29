@@ -9,7 +9,8 @@ export type Text = {
   type: 'text';
   position: string | { x: number, y: number };
   value?: string;
-  size: number;
+  width: number,
+  height: number,
   fill?: string | number | null;
 };
 

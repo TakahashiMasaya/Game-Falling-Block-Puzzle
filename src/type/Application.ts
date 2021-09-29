@@ -58,3 +58,19 @@ export type paramIsCollision = {
   tetromino: ActiveTetrominoStatus;
   field: string[][];
 }
+
+export type paramTransferredScreen = {
+  window: { width: number, height: number },
+  screen: { width: number, height: number },
+  verticalAlign?: 'center',
+  horizonalAlign?: 'center',
+}
+
+export type paramTransfer = {
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+}
+
+export type paramTransfers = paramTransfer[]

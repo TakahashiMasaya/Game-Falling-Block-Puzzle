@@ -1,7 +1,17 @@
+import p5 from 'p5';
 import { Controller } from '@/controllers/Controller';
 import { paramSetAction } from '@/type/Controllers';
 
 export class PC implements Controller {
+  private p5: p5;
+
+  constructor(p: p5) {
+    if (!p) {
+      throw new Error('param p does not exist!');
+    }
+    this.p5 = p;
+  }
+
   public setAction = ({
     action: {
       up,
@@ -20,78 +30,60 @@ export class PC implements Controller {
       offEnter,
     },
   }: paramSetAction) => {
-    document.addEventListener('keydown', (e) => {
-      switch (e.key) {
-        case 'ArrowUp':
-        case 'Up':
+    this.p5.keyPressed = () => {
+      switch (this.p5.keyCode) {
+        case this.p5.UP_ARROW:
           up();
           break;
-        case 'ArrowRight':
-        case 'Right':
-          right();
-          break;
-        case 'ArrowDown':
-        case 'Down':
-          down();
-          break;
-        case 'ArrowLeft':
-        case 'Left':
+        case this.p5.LEFT_ARROW:
           left();
           break;
-
-        case 'z':
-        case 'Z':
+        case this.p5.RIGHT_ARROW:
+          right();
+          break;
+        case this.p5.DOWN_ARROW:
+          down();
+          break;
+        case 90: // Z
           spinLeft();
           break;
-        case 'x':
-        case 'X':
+        case 88: // X
           spinRight();
           break;
-
-        case ' ':
-        case 'Spacebar':
+        case 32: // Space
           enter();
           break;
         default:
       }
       return false;
-    }, false);
+    };
 
-    document.addEventListener('keyup', (e) => {
-      switch (e.key) {
-        case 'ArrowUp':
-        case 'Up':
+    this.p5.keyReleased = () => {
+      switch (this.p5.keyCode) {
+        case this.p5.UP_ARROW:
           offUp();
           break;
-        case 'ArrowRight':
-        case 'Right':
-          offRight();
-          break;
-        case 'ArrowDown':
-        case 'Down':
-          offDown();
-          break;
-        case 'ArrowLeft':
-        case 'Left':
+        case this.p5.LEFT_ARROW:
           offLeft();
           break;
-
-        case 'z':
-        case 'Z':
+        case this.p5.RIGHT_ARROW:
+          offRight();
+          break;
+        case this.p5.DOWN_ARROW:
+          offDown();
+          break;
+        case 90: // Z
           offSpinLeft();
           break;
-        case 'x':
-        case 'X':
+        case 88: // X
           offSpinRight();
           break;
-
-        case ' ':
-        case 'Spacebar':
+        case 32: // Space
           offEnter();
           break;
         default:
       }
       return false;
-    }, false);
+    };
   }
 }

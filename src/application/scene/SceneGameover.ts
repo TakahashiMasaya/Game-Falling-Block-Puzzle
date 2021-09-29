@@ -37,7 +37,8 @@ export class SceneGameover implements Scene {
       type: 'text',
       position: 'center',
       value: 'Gameover',
-      size: 30,
+      width: 30,
+      height: 30,
     }];
   }
 

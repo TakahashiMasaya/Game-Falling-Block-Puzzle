@@ -98,12 +98,13 @@ export class ScenePlaying implements Scene {
     };
 
     const { tetromino: nextTetromino } = this.nextTetromino;
+    const tetrominoWidth = 18;
     // fieldを表示
     this.drawing = f.getStatus()?.map((rows: string[], y) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
       type: 'image',
-      position: { x: x * 20 + 30, y: y * 20 + 50 },
-      width: 20,
-      height: 20,
+      position: { x: x * tetrominoWidth + 30, y: y * tetrominoWidth + 50 },
+      width: tetrominoWidth,
+      height: tetrominoWidth,
       stroke: 0,
       fill: getFillColor(cu),
     }] : ar), [])).flat();
@@ -112,22 +113,26 @@ export class ScenePlaying implements Scene {
       ...this.drawing,
       ...tetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
         type: 'image',
-        position: { x: (x * 20) + 30 + (fx * 20), y: (y * 20) + 50 + (fy * 20) },
-        width: 20,
-        height: 20,
+        position: {
+          x: (x * tetrominoWidth) + 30 + (fx * tetrominoWidth),
+          y: (y * tetrominoWidth) + 50 + (fy * tetrominoWidth),
+        },
+        width: tetrominoWidth,
+        height: tetrominoWidth,
         stroke: 0,
         fill: getFillColor(cu),
       }] : ar), [])).flat(),
       {
         type: 'text',
-        position: { x: 300, y: 100 },
-        value: 'next',
+        position: { x: 330, y: 100 },
+        value: 'Next',
         fill: 255,
-        size: 30,
+        width: 30,
+        height: 30,
       },
-      ...nextTetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+      ...nextTetromino?.map<Image[]>((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
         type: 'image',
-        position: { x: (x * 20) + 270, y: (y * 20) + 120 },
+        position: { x: (x * 20) + 300, y: (y * 20) + 120 },
         width: 20,
         height: 20,
         stroke: 0,
@@ -135,31 +140,35 @@ export class ScenePlaying implements Scene {
       }] : ar), [])).flat(),
       {
         type: 'text',
-        position: { x: 300, y: 250 },
-        value: 'score',
+        position: { x: 330, y: 250 },
+        value: 'Score',
         fill: 255,
-        size: 30,
+        width: 30,
+        height: 30,
       },
       {
         type: 'text',
-        position: { x: 300, y: 280 },
+        position: { x: 330, y: 280 },
         value: this.score?.get().toString(),
         fill: 255,
-        size: 30,
+        width: 30,
+        height: 30,
       },
       {
         type: 'text',
-        position: { x: 300, y: 350 },
+        position: { x: 330, y: 350 },
         value: 'Lines',
         fill: 255,
-        size: 30,
+        width: 30,
+        height: 30,
       },
       {
         type: 'text',
-        position: { x: 300, y: 380 },
+        position: { x: 330, y: 380 },
         value: this.removeLines.toString(),
         fill: 255,
-        size: 30,
+        width: 30,
+        height: 30,
       },
     ];
   }

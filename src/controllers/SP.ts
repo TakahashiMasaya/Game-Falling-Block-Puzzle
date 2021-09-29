@@ -3,20 +3,22 @@ import { paramSetAction } from '@/type/Controllers';
 
 export class SP implements Controller {
   public setAction = ({
-    up,
-    right,
-    down,
-    left,
-    spinLeft,
-    spinRight,
-    enter,
-    offUp,
-    offRight,
-    offDown,
-    offLeft,
-    offSpinLeft,
-    offSpinRight,
-    offEnter,
+    action: {
+      up,
+      right,
+      down,
+      left,
+      spinLeft,
+      spinRight,
+      enter,
+      offUp,
+      offRight,
+      offDown,
+      offLeft,
+      offSpinLeft,
+      offSpinRight,
+      offEnter,
+    },
   }: paramSetAction) => {
     document.querySelector('.up')?.addEventListener('touchenter', () => up(), false);
     document.querySelector('.up')?.addEventListener('touchmove', () => up(), false);

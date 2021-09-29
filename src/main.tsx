@@ -1,5 +1,6 @@
 import { TransferredController } from '@/application/TransferredController';
 import { InteractiveController } from '@/interactor/InteractiveController';
+
 // TODO: 入力コントローラーの設定をp5用にする
 // import { paramSetAction } from './type/Controllers';
 // import { PC } from '@/controllers/PC';
@@ -59,3 +60,11 @@ const sc = new SceneChangerP5({
   interactiveController: ic,
 });
 sc.start();
+
+// touchmoveブラウザのスクロール・拡大縮小を無効
+window.addEventListener('touchstart', (e) => e.preventDefault(), {
+  passive: false,
+});
+window.addEventListener('touchmove', (e) => e.preventDefault(), {
+  passive: false,
+});

@@ -2,7 +2,12 @@
 
 namespace Presenters {
   namespace P5 {
-    class p5 {}
+    class P5 {
+      - buttons: any
+      + styledButtons(): void
+      + adjustButtons(): void
+      + getButtons(): Buttons
+    }
   }
   namespace Screen {
     class Dom {
@@ -149,15 +154,19 @@ namespace Application {
     SceneInterface <|-- SceneGameover
   }
 
-    ' tetrominoとfieldで衝突判定をする
+  ' tetrominoとfieldで衝突判定をする
   class CollisionalDetector {
     + isCollision({ tetromino: Piece, field: Field }): boolean
   }
 
-  ' fieldを描画用に置換する
-  class TranferringToDraw {
-    + set(string[][]): void
-    + transfer(): { x: number, y: number, texture: string }[] 
+  ' 画面表示用に位置、サイズを変換する
+  class TranferringScreen {
+    - window: { width: number, height: number }
+    - screen: { width: number, height: number }
+    - rate: number
+    + init({ window: window, screen: screen }): void
+    + windowRotate(): void
+    + transfer(): { x: number, y: number, width: number, height: number }[] 
   }
 
   ' 次のtetrominoをセットする
@@ -189,8 +198,8 @@ Application.Scene.SceneGameover ---> Application.TransferredController
 
 Application.Scene.Changer.SceneChangerP5 --> Application.Scene.SceneStart
 Application.Scene.ScenePlaying --> Application.NextTetrominos
-Application.Scene.ScenePlaying --> Application.TranferringToDraw
-Application.Scene.SceneGameover --> Application.TranferringToDraw 
+Application.Scene.ScenePlaying --> Application.TranferringScreen
+Application.Scene.SceneGameover --> Application.TranferringScreen 
 Application.Scene.ScenePlaying --> Application.CollisionalDetector
 
 Application.Scene.Changer.SceneChangerP5 ---> Application.Scene.ScenePlaying
@@ -313,6 +322,6 @@ Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
 Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
 Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface
 
-Presenters.P5.p5 <--- Application.Scene.Changer.SceneChangerP5
+Presenters.P5.P5 <--- Application.Scene.Changer.SceneChangerP5
 
 @enduml
