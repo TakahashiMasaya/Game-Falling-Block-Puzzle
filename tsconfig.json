@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "strict": true,
+    // TSはECMAScript 5に変換
+    "target": "ES5",
+    // TSのモジュールはES Modulesとして出力
+    "module": "ES2015",
+    // JSXの書式を有効に設定
+    "jsx": "react",
+    "moduleResolution": "node",
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "baseUrl": "./src/",
+    "paths": {
+      "@/*": ["*"]
+    },
+  }
+}

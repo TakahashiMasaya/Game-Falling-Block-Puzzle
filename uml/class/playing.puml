@@ -1,0 +1,327 @@
+@startuml Overview
+
+namespace Presenters {
+  namespace P5 {
+    class P5 {
+      - buttons: any
+      + styledButtons(): void
+      + adjustButtons(): void
+      + getButtons(): Buttons
+    }
+  }
+  namespace Screen {
+    class Dom {
+      - mainController: Dom
+      - spinLeft: Dom
+      - spinRight: Dom
+      - enter: Dom
+
+      + init({ mainController: Dom, spinLeft: Dom, spinRight: Dom, enter: Dom }): void
+      + opening(): void
+      + playing(): void
+      + gameover(): void
+    }
+
+    class Canvas {
+      - canvas: HTMLCanvasElement 
+      - context: CanvasRenderingContext2D
+      - imageAssets: ImageAssets
+      + drawImage({ texture: string, sx, number, sy, number, sw: number, sh: number, dx: number, dy: number, dw: number, dh: number }): void
+    }
+
+    class ImageAssets {
+      - images: {'player': { src:'images/shooting_player.png', rate:1.00, obj:new Image}}
+      + createAssets(): void
+      + get({ texture: string }): Image
+    }
+
+    Canvas <--- InteractorForPresenter.InteractivePresenter
+    Dom <--- InteractorForPresenter.InteractivePresenter
+    ImageAssets <--- Canvas
+  }
+  namespace Audio {
+    class AudioContext{
+      - playing: []
+      - sound: []
+      - context: AudioContext
+      - data: { 'shot_laser': { src:'audios/shot_laser.mp3', volume:1.0, loopOffset: 0, buf:{}},
+      + init() : void
+      + play({ name: string }) : void
+      + stop({ name: string }): void
+      + stop(): void
+      + makeSound({ name: string }) : void
+    }
+    AudioContext <--- InteractorForPresenter.InteractivePresenter
+
+    class AudioAssets {
+      - assets: Audio
+      + createAssets(): void
+      + get(): Audio
+    }
+    AudioAssets <--- AudioContext
+  }
+}
+
+' Presentersに情報を渡すための情報を加工する
+namespace InteractorForPresenter {
+  class InteractivePresenter {
+    + draw({{ x: number, y: number, texture: string }[]): void
+    + sound({ sound: string }[]): void
+    + setBackgroundSound({ backgroundSound: string }): void
+    + playBackgroundSound(): void
+    + stopBackgroundSound(): void
+  }
+}
+
+namespace InteractorForController {
+  class InteractiveController {
+    - status: { up: boolean, right: boolean, down: boolean, left: boolean, spinRight: boolean, spinLeft: boolean, enter: boolean }
+    + up(): void
+    + right(): void
+    + down(): void
+    + left(): void
+    + spinLeft(): void
+    + spinRight(): void
+    + enter(): void
+    + offUp(): void
+    + offRight(): void
+    + offDown(): void
+    + offLeft(): void
+    + offSpinLeft(): void
+    + offSpinRight(): void
+    + offEnter(): void
+    + keyStatus(): { up: boolean, right: boolean, down: boolean, left: boolean, spinRight: boolean, spinLeft: boolean, enter: boolean }
+  }
+}
+
+namespace Application {
+  namespace Scene {
+    namespace Changer {
+      interface SceneChanger{
+        + start(): void
+      }
+      class SceneChangerP5{
+        - scene: SceneStart | ScenePlaying | SceneGameover | null
+        - list: (SceneStart | ScenePlaying | SceneGameover)[] | null
+        - listNum: number
+        - sketch(): void
+        + start(): void
+      }
+
+      class SceneChangerCanvas{
+      }
+
+      SceneChanger <|-- SceneChangerP5
+      SceneChanger <|-- SceneChangerCanvas
+    }
+
+    interface SceneInterface {
+      + start(): void
+    }
+    class SceneStart{
+      - transferredController: TransferredController
+      - interactivePresenter: InteractivePresenter
+      + start()
+      + move()
+      + draw()
+      + isEnd()
+    }
+    class ScenePlaying{
+      - tetrominoCollidedTimes: number
+      - soundForBackground: string
+      - soundForReachedTetromino: string
+      - status: 'start'|'dropTetromino'|'droppingTetromino'|'removeFullRow'|'updateField'|'gameover'
+      - InteractiveController: TransferredController
+      - InteractivePresenter: InteractivePresenter
+      - setDrawing(): void
+      - moveDropping(): void
+      - moveHorizontally(): void
+      + start()
+      + move()
+      + draw()
+      + isEnd()
+    }
+    class SceneGameover{
+      - transferredController: TransferredController
+      - interactivePresenter: InteractivePresenter
+      + start()
+      + move()
+      + draw()
+      + isEnd()
+    }
+    SceneInterface <|-- SceneStart
+    SceneInterface <|-- ScenePlaying
+    SceneInterface <|-- SceneGameover
+  }
+
+  ' tetrominoとfieldで衝突判定をする
+  class CollisionalDetector {
+    + isCollision({ tetromino: Piece, field: Field }): boolean
+  }
+
+  ' 画面表示用に位置、サイズを変換する
+  class TranferringScreen {
+    - window: { width: number, height: number }
+    - screen: { width: number, height: number }
+    - rate: number
+    + init({ window: window, screen: screen }): void
+    + windowRotate(): void
+    + transfer(): { x: number, y: number, width: number, height: number }[] 
+  }
+
+  ' 次のtetrominoをセットする
+  class NextTetrominos {
+    - list: number[]
+    - stockQuantity: number
+    - tetrominoQuantity: number
+    - readyToTetrominos(): void
+    + getList(): number[]
+    + next(): number
+  }
+
+  ' コントローラーのステータスをアプリ用に変換する
+  class TransferredController {
+    - interactiveController: InteractiveController
+    - status: { left: number, right: number, down: number, spinRight: number, spinRight: number }
+    + getStatus(): { left: number, right: number, down: number, spinRight: number, spinRight: number }
+    + transfer(): void
+    + reset(): void
+  }
+
+}
+
+Application.TransferredController ---> InteractorForController.InteractiveController
+
+Application.Scene.SceneStart ---> Application.TransferredController
+Application.Scene.ScenePlaying ---> Application.TransferredController
+Application.Scene.SceneGameover ---> Application.TransferredController
+
+Application.Scene.Changer.SceneChangerP5 --> Application.Scene.SceneStart
+Application.Scene.ScenePlaying --> Application.NextTetrominos
+Application.Scene.ScenePlaying --> Application.TranferringScreen
+Application.Scene.SceneGameover --> Application.TranferringScreen 
+Application.Scene.ScenePlaying --> Application.CollisionalDetector
+
+Application.Scene.Changer.SceneChangerP5 ---> Application.Scene.ScenePlaying
+Application.Scene.Changer.SceneChangerP5 ---> Application.Scene.SceneGameover
+Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.SceneStart
+Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.ScenePlaying
+Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.SceneGameover
+Application.Scene.Changer.SceneChangerCanvas ---> InteractorForPresenter.InteractivePresenter
+
+namespace Controllers {
+  interface Controller {
+    + setAction({ up: void, right: void, down: void, left: void, spinLeft: void, spinRight: void, enter: void, offUp: void, offRight: void, offDown: void, offLeft: void, offSpinLeft: void, offSpinRight: void, offEnter: void})
+  }
+  class PC {
+  }
+  class SP {
+    - mainController: Dom
+    - spinLeft: Dom
+    - spinRight: Dom
+    - enter: Dom
+  }
+  Controller <|-- PC
+  Controller <|-- SP
+  InteractorForController.InteractiveController <--- Controller
+}
+
+namespace Domain {
+  namespace Parts {
+    interface ScoreInterface {
+      - score: number
+      + add(number: number): void
+      + get(): number
+      + reset(): void
+    }
+    class Score {}
+    ScoreInterface <|-- Score
+
+    interface FieldInterface {
+      + update({ x: number, y: number, tetromino: string[][] }): void
+      + canRemoveFullRow(): boolean
+      + removeFullRow(): void
+      + getRemoveRows(): nnumber
+      + getStatus(): string[][]
+    }
+    FieldInterface <|-- Field10x20
+    class Field10x20 {
+      - status: [ ['0', '0', ... '0'], ['0', '0', ... '0'], ... ['0', '0', ... '0']]
+      - replaceBitString({ string: string, replace: string, start: number })
+    }
+
+    Class ActiveTetromino {
+      - tetromino: Piece
+
+      + start({ x: number, y: number, tetromino: number }): void
+      + nextAction({left: boolean, right: boolean, down: boolean, spinLeft: boolean, spinRight: booelan }): { x: number: y: number, tetromino: string[][]}
+      + setAction({left: boolean, right: boolean, down: boolean, spinLeft: boolean, spinRight: booelan }): void
+      + getStatus(): { x: number, y: number, tetromino: string[][] }
+    }
+
+    Class NextTetromino {
+      - type: number
+      - tetromino: string[][]
+      + set(number: number): void
+      + get(): { type: number, tetromino: string[][] }
+    }
+
+    Interface InterfaceTetromino {
+      - pieces: string[][]
+      - spinStatus: number
+
+      + spinLeft(): void
+      + spinRight(): void
+      + getPiece(): string[][]
+      + getPieceToSpinLeft(): string[][]
+      + getPieceToSpinRight(): string[][]
+    }
+
+    class Tetromino {
+      - pieces: [][]
+    }
+
+    class ITetromino {
+      - pieces: [['0', 'l', '0', '0'], ['0', 'l', '0', '0'], ['0', 'l', '0', '0'], ['0', 'l', '0', '0']]
+    }
+    class LTetromino {
+      - pieces: [[l', '0', '0',], ['l', '0', '0'], ['l', 'l', '0']]
+    }
+    class OTetromino {
+      - pieces: [['o', 'o'], ['o', 'o']]
+    }
+    class STetromino {
+      - pieces: [['0', 's', 's'], ['s', 's', '0'], ['0', '0', '0']]
+    }
+    class ZTetromino {
+      - pieces: [['z', 'z', '0'], ['0', 'z', 'z'], ['0', '0', '0']]
+    }
+    class JTetromino {
+      - pieces: [['0', '0', 'j'], ['0', '0', 'j'], ['0', 'j', 'j']]
+    }
+    class Piece {
+      - pieces: [['0', 't', '0'], ['t', 't', 't'], ['0', '0', '0']]
+    }
+
+    NextTetromino ---> Tetromino
+    ActiveTetromino ---> Tetromino
+    InterfaceTetromino <|-- Tetromino 
+    Tetromino <|-- ITetromino
+    Tetromino <|-- LTetromino
+    Tetromino <|-- OTetromino
+    Tetromino <|-- STetromino
+    Tetromino <|-- ZTetromino
+    Tetromino <|-- JTetromino
+    Tetromino <|-- Piece
+  }
+
+}
+
+Application.Scene.ScenePlaying ---> Domain.Parts.NextTetromino
+Application.Scene.ScenePlaying ---> Domain.Parts.ActiveTetromino
+Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
+Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface
+
+Presenters.P5.P5 <--- Application.Scene.Changer.SceneChangerP5
+
+@enduml
