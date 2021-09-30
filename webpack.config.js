@@ -9,7 +9,7 @@ module.exports = {
   mode: MODE,
 
   // メインとなるJavaScriptファイル（エントリーポイント）
-  entry: './src/main.tsx',
+  entry: `${__dirname}/src/main.tsx`,
   // ファイルの出力設定
   output: {
     //  出力ファイルのディレクトリ名
