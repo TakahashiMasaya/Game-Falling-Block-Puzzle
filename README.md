@@ -1,6 +1,6 @@
 # Game-Falling-Block-Puzzle
 Game Falling Block Puzzle is Like Tet.....  
-(below image is now progressing.)
+(below image is now progressing.)  
 ![](https://user-images.githubusercontent.com/12569855/135569538-14fbb34c-9dd7-489d-8363-f16c45e6799e.png)
 
 ## How to play
