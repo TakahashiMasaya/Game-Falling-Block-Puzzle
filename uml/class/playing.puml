@@ -3,7 +3,7 @@
 namespace Presenters {
   namespace P5 {
     class P5 {
-      - buttons: any
+      - buttons: p5.Element[]
       + styledButtons(): void
       + adjustButtons(): void
       + getButtons(): Buttons
@@ -101,9 +101,11 @@ namespace Application {
         + start(): void
       }
       class SceneChangerP5{
-        - scene: SceneStart | ScenePlaying | SceneGameover | null
-        - list: (SceneStart | ScenePlaying | SceneGameover)[] | null
-        - listNum: number
+        - list: (SceneStart | ScenePlaying | SceneGameover)[]
+        - canvasElement: HTMLElement
+        - interactiveController: InteractiveController
+        - isPlaying: boolean
+        - transferredScreen: TransferredScreen | null
         - sketch(): void
         + start(): void
       }
@@ -211,19 +213,19 @@ Application.Scene.Changer.SceneChangerCanvas ---> InteractorForPresenter.Interac
 
 namespace Controllers {
   interface Controller {
-    + setAction({ up: void, right: void, down: void, left: void, spinLeft: void, spinRight: void, enter: void, offUp: void, offRight: void, offDown: void, offLeft: void, offSpinLeft: void, offSpinRight: void, offEnter: void})
+    + setAction({ buttons: p5.Element[] | Dom, action: { up: void, right: void, down: void, left: void, spinLeft: void, spinRight: void, enter: void, offUp: void, offRight: void, offDown: void, offLeft: void, offSpinLeft: void, offSpinRight: void, offEnter: void})
   }
-  class PC {
-  }
-  class SP {
-    - mainController: Dom
-    - spinLeft: Dom
-    - spinRight: Dom
-    - enter: Dom
-  }
+  class PC {}
+  class SP {}
   Controller <|-- PC
   Controller <|-- SP
   InteractorForController.InteractiveController <--- Controller
+  namespace p5 {
+    class PC {}
+    class SP {}
+  }
+  Controller <|-- Controllers.p5.PC
+  Controller <|-- Controllers.p5.SP
 }
 
 namespace Domain {
