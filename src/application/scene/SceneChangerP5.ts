@@ -112,62 +112,7 @@ export class SceneChangerP5 {
       buttons.adjustButtons(adjustButtons);
     };
 
-    const resizeWindow = () => {
-      p.resizeCanvas(p.windowWidth, p.windowHeight);
-      this.transferredScreen?.resizeWindow({
-        width: p.windowWidth,
-        height: p.windowHeight,
-      });
-      resizeButtons();
-    };
-
-    const action: paramSetAction = {
-      action: {
-        up: this.interactiveController.up,
-        down: this.interactiveController.down,
-        left: this.interactiveController.left,
-        right: this.interactiveController.right,
-        spinRight: this.interactiveController.spinRight,
-        spinLeft: this.interactiveController.spinLeft,
-        enter: this.interactiveController.enter,
-        offUp: this.interactiveController.offUp,
-        offDown: this.interactiveController.offDown,
-        offLeft: this.interactiveController.offLeft,
-        offRight: this.interactiveController.offRight,
-        offSpinRight: this.interactiveController.offSpinRight,
-        offSpinLeft: this.interactiveController.offSpinLeft,
-        offEnter: () => {
-          this.interactiveController.offEnter();
-          resizeWindow();
-          if (s.constructor.name !== 'ScenePlaying') { return; }
-          if (this.isPlaying) {
-            p.noLoop();
-            this.isPlaying = false;
-          } else {
-            p.loop();
-            this.isPlaying = true;
-          }
-        },
-      },
-    };
-
-    pc.setAction({
-      ...action,
-    });
-    sp.setAction({
-      buttons: buttons.getButtons(),
-      ...action,
-    });
-
-    // TODO: ボタン系は暫定
-    p.setup = () => {
-      p.createCanvas(p.windowWidth, p.windowHeight);
-      resizeButtons();
-    };
-
-    p.windowResized = () => resizeWindow();
-
-    p.draw = () => {
+    const draw = () => {
       p.background('#0f2350');
       p.noStroke();
       p.fill(255);
@@ -235,6 +180,65 @@ export class SceneChangerP5 {
         s = scene.next().value;
       }
     };
+
+    const resizeWindow = () => {
+      p.resizeCanvas(p.windowWidth, p.windowHeight);
+      this.transferredScreen?.resizeWindow({
+        width: p.windowWidth,
+        height: p.windowHeight,
+      });
+      draw();
+      resizeButtons();
+    };
+
+    const action: paramSetAction = {
+      action: {
+        up: this.interactiveController.up,
+        down: this.interactiveController.down,
+        left: this.interactiveController.left,
+        right: this.interactiveController.right,
+        spinRight: this.interactiveController.spinRight,
+        spinLeft: this.interactiveController.spinLeft,
+        enter: this.interactiveController.enter,
+        offUp: this.interactiveController.offUp,
+        offDown: this.interactiveController.offDown,
+        offLeft: this.interactiveController.offLeft,
+        offRight: this.interactiveController.offRight,
+        offSpinRight: this.interactiveController.offSpinRight,
+        offSpinLeft: this.interactiveController.offSpinLeft,
+        offEnter: () => {
+          this.interactiveController.offEnter();
+          resizeWindow();
+          if (s.constructor.name !== 'ScenePlaying') { return; }
+          if (this.isPlaying) {
+            p.noLoop();
+            this.isPlaying = false;
+          } else {
+            p.loop();
+            this.isPlaying = true;
+          }
+        },
+      },
+    };
+
+    pc.setAction({
+      ...action,
+    });
+    sp.setAction({
+      buttons: buttons.getButtons(),
+      ...action,
+    });
+
+    // ウィンドウリサイズを定義
+    p.windowResized = () => resizeWindow();
+
+    // TODO: ボタン系は暫定
+    p.setup = () => {
+      p.createCanvas(p.windowWidth, p.windowHeight);
+      resizeButtons();
+    };
+
+    p.draw = () => { draw(); };
   };
 
   public start = () => {
