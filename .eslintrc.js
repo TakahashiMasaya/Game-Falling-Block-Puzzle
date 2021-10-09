@@ -34,6 +34,7 @@ module.exports = {
           '.json',
           '.ts',
           '.tsx',
+          '.svg',
         ],
       },
       alias: {
@@ -49,6 +50,7 @@ module.exports = {
           '.jsx',
           '.ts',
           '.tsx',
+          '.svg',
         ],
       },
     },

@@ -30,6 +30,17 @@ module.exports = {
   module: {
     rules: [
       {
+        // 対象となるファイルの拡張子
+        test: /\.(gif|png|jpg|svg)$/,
+        // 画像をBase64として取り込む
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 100000,
+          },
+        },
+      },
+      {
         // 拡張子 .ts もしくは .tsx の場合
         test: /\.tsx?$/,
         // TypeScript をコンパイルする
