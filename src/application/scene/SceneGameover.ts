@@ -36,7 +36,7 @@ export class SceneGameover implements Scene {
     this.drawing = [{
       type: 'text',
       position: 'center',
-      value: 'Gameover',
+      value: 'Gameover\nPress ■ button',
       width: 30,
       height: 30,
     }];
