@@ -184,7 +184,6 @@ export class ScenePlaying implements Scene {
     const {
       down,
     } = this.transferredController.getStatus();
-    if (down) { this.score?.add(10); }
 
     if (cd.isCollision({
       tetromino: at.nextAction({
@@ -213,6 +212,7 @@ export class ScenePlaying implements Scene {
       down: auto || down,
     });
     this.tetrominoCollidedTimes = 0;
+    if (down) { this.score?.add(10); }
   }
 
   /**
