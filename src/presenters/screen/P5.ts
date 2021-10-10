@@ -6,6 +6,9 @@ import up from '@/assets/buttons/up.svg';
 import down from '@/assets/buttons/down.svg';
 import right from '@/assets/buttons/right.svg';
 import left from '@/assets/buttons/left.svg';
+import spinLeft from '@/assets/buttons/spinLeft.svg';
+import spinRight from '@/assets/buttons/spinRight.svg';
+import enter from '@/assets/buttons/enter.svg';
 
 export class P5 {
   private p5: p5;
@@ -44,21 +47,31 @@ export class P5 {
   private styledButtons = () => {
     Object.keys(this.buttons).forEach((button) => {
       const bt = this.buttons[button as keyof Buttons];
+      const linearGradient = 'linear-gradient(45deg, rgb(37, 37, 37) 0%, rgb(49, 49, 49) 35%, rgb(167, 167, 167) 100%)';
       switch (button) {
         case 'up':
-          bt.style('background', `url(${up}), linear-gradient(45deg, rgb(37, 37, 37) 0%, rgb(49, 49, 49) 35%, rgb(167, 167, 167) 100%)`);
+          bt.style('background', `url(${up}), ${linearGradient}`);
           break;
         case 'down':
-          bt.style('background', `url(${down}), linear-gradient(45deg, rgb(37, 37, 37) 0%, rgb(49, 49, 49) 35%, rgb(167, 167, 167) 100%)`);
+          bt.style('background', `url(${down}), ${linearGradient}`);
           break;
         case 'right':
-          bt.style('background', `url(${right}), linear-gradient(45deg, rgb(37, 37, 37) 0%, rgb(49, 49, 49) 35%, rgb(167, 167, 167) 100%)`);
+          bt.style('background', `url(${right}), ${linearGradient}`);
           break;
         case 'left':
-          bt.style('background', `url(${left}), linear-gradient(45deg, rgb(37, 37, 37) 0%, rgb(49, 49, 49) 35%, rgb(167, 167, 167) 100%)`);
+          bt.style('background', `url(${left}), ${linearGradient}`);
+          break;
+        case 'spinLeft':
+          bt.style('background', `url(${spinLeft}), ${linearGradient}`);
+          break;
+        case 'spinRight':
+          bt.style('background', `url(${spinRight}), ${linearGradient}`);
+          break;
+        case 'enter':
+          bt.style('background', `url(${enter}), ${linearGradient}`);
           break;
         default:
-          bt.style('background', 'linear-gradient(45deg, rgb(37, 37, 37) 0%, rgb(49, 49, 49) 35%, rgb(167, 167, 167) 100%)');
+          bt.style('background', `${linearGradient}`);
       }
       bt.style('color', '#cccccc');
       bt.style('display', 'block');
