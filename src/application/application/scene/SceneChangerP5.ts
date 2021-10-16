@@ -10,6 +10,8 @@ import { PC } from '@/application/controllers/p5/PC';
 import { SP } from '@/application/controllers/p5/SP';
 import { P5 } from '@/application/presenters/screen/P5';
 
+import { ScenePlaying } from './ScenePlaying';
+
 export class SceneChangerP5 {
   private list: Scene[];
 
@@ -219,7 +221,7 @@ export class SceneChangerP5 {
         offEnter: () => {
           this.interactiveController.offEnter();
           resizeWindow();
-          if (s.constructor.name !== 'ScenePlaying') { return; }
+          if (s.constructor !== ScenePlaying) { return; }
           if (this.isPlaying) {
             p.noLoop();
             this.isPlaying = false;
