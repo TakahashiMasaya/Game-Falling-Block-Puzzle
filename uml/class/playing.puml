@@ -90,6 +90,7 @@ namespace InteractorForController {
     + offSpinLeft(): void
     + offSpinRight(): void
     + offEnter(): void
+    + reset(): void
     + keyStatus(): { up: boolean, right: boolean, down: boolean, left: boolean, spinRight: boolean, spinLeft: boolean, enter: boolean }
   }
 }

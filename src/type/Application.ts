@@ -1,6 +1,6 @@
-import { TransferredController } from '@/application/TransferredController';
-import { InteractivePresenter } from '@/interactor/InteractivePresenter';
-import { Score } from '@/domain/parts/score/Score';
+import { TransferredController } from '@/application/application/TransferredController';
+import { InteractivePresenter } from '@/application/interactor/InteractivePresenter';
+import { Score } from '@/application/domain/parts/score/Score';
 
 export type TTransferredController = {
   up: number,

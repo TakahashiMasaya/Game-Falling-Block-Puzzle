@@ -1,4 +1,4 @@
-import { NextTetrominos } from '@/application/NextTetrominos';
+import { NextTetrominos } from '@/application/application/NextTetrominos';
 
 describe('NextTetrominos', () => {
   it('指定引数が正しくセットされていること', () => {

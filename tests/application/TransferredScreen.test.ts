@@ -1,4 +1,4 @@
-import { TransferredScreen } from '@/application/TransferredScreen';
+import { TransferredScreen } from '@/application/application/TransferredScreen';
 import { paramTransfers } from '@/type/Application';
 
 describe('TransferredScreen', () => {

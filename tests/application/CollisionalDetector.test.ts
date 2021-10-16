@@ -1,6 +1,6 @@
-import { ActiveTetromino } from '@/domain/parts/tetrominos/ActiveTetromino';
-import { Field10x20 } from '@/domain/parts/field/Field10x20';
-import { CollisionalDetector } from '@/application/CollisionalDetector';
+import { ActiveTetromino } from '@/application/domain/parts/tetrominos/ActiveTetromino';
+import { Field10x20 } from '@/application/domain/parts/field/Field10x20';
+import { CollisionalDetector } from '@/application/application/CollisionalDetector';
 
 type tct = CollisionalDetector | null;
 describe('CollisionalDetector', () => {
