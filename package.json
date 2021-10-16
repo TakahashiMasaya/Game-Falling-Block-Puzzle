@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "build:dev": "NODE_ENV=development dotenv -e .env.development webpack",
-    "build": "NODE_ENV=production dotenv -e .env.production webpack",
+    "build:prod": "NODE_ENV=production dotenv -e .env.production webpack",
+    "build": "NODE_ENV=production dotenv -e .env webpack",
     "watch": "webpack -w",
     "serve": "webpack serve",
     "test": "jest --coverage"
