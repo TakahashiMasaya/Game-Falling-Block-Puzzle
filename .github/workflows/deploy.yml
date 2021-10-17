@@ -17,6 +17,10 @@ jobs:
           node-version: ${{ matrix.node }}
       - name: gulp build
         uses: actions/setup-node@v2
+      - shell: bash
+        run: |
+          touch .env
+          echo "ROOT_PATH=${{ secrets.ROOT_PATH }}" >> .env
       - run: yarn install && yarn build
       - name: ssh key generate
         run: echo "$SSH_PRIVATE_KEY" > key && chmod 600 key

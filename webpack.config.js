@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const MODE = 'production';
-const MODE = 'development';
+const Dotenv = require('dotenv-webpack');
+
+const MODE = process.env.NODE_ENV || 'development';
 const enabledSourceMap = MODE === 'development';
 
 module.exports = {
@@ -22,13 +23,26 @@ module.exports = {
     open: true,
   },
   plugins: [
+    new Dotenv({
+      systemvars: true,
+    }),
     new HtmlWebpackPlugin({
       template: `${__dirname}/src/html/index.html`,
       filename: 'index.html',
-    }),
-  ],
+    })],
   module: {
     rules: [
+      {
+        // 対象となるファイルの拡張子
+        test: /\.(gif|png|jpg|svg)$/,
+        // 画像をBase64として取り込む
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 300000,
+          },
+        },
+      },
       {
         // 拡張子 .ts もしくは .tsx の場合
         test: /\.tsx?$/,
@@ -74,6 +88,5 @@ module.exports = {
       '@': `${__dirname}/src`,
     },
   },
-  // ES5(IE11等)向けの指定（webpack 5以上で必要）
-  target: ['web', 'es5'],
+  performance: { hints: false },
 };

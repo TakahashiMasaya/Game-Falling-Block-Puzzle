@@ -1,6 +1,6 @@
 # Game-Falling-Block-Puzzle
 Game Falling Block Puzzle is Like Tet.....  
-(See below image is now progressing.)  
+(See below image is now progressing.)   
 ![](https://user-images.githubusercontent.com/12569855/135569538-14fbb34c-9dd7-489d-8363-f16c45e6799e.png)
 
 ## How to play
@@ -20,3 +20,23 @@ See below details pressing keys.
 
 ## UML(class structure)
 ![](https://user-images.githubusercontent.com/12569855/135568251-cffd7f75-265b-42e9-bf65-1d0a51be554b.png)
+
+## How to use docker
+
+It uses image `Nginx:latest`(At the moment).
+
+### run
+```
+$ docker-compose up   
+```
+(mounted `./dist` and `./templates/default.conf.template`)
+
+### custom configure file
+```
+$ view ./templates/default.conf.template
+```
+
+## GitHub Action
+
+When you push any files on `lightsail` branch, run GitHub Action.  
+※You mustn't push on `lightsail`.  

@@ -1,5 +1,5 @@
-import { TransferredController } from '@/application/TransferredController';
-import { InteractiveController } from '@/interactor/InteractiveController';
+import { TransferredController } from '@/application/application/TransferredController';
+import { InteractiveController } from '@/application/interactor/InteractiveController';
 
 describe('TransferredController', () => {
   describe('各種ボタンのステータス確認', () => {

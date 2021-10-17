@@ -1,17 +1,1 @@
 @import './base';
-
-.game-wrapper {
-  width: 100%;
-  height: 80%;
-}
-
-.mobile-controller {
-  & > * {
-    border-radius: 50%;
-    display: block;
-    border: 1px solid #000000;
-    color: #000000;
-    width: 50px;
-    height: 50px;
-  }  
-}

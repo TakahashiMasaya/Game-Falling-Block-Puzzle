@@ -1,0 +1,7 @@
+web:
+  image: nginx:latest
+  volumes:
+   - ./dist:/usr/share/nginx/html/g_fbp/:ro
+   - ./templates:/etc/nginx/templates
+  ports:
+   - "8081:80"
