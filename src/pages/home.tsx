@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+import { removeEvent } from './settings';
 
 const HomeWrapper = styled.div`
   display: flex;
@@ -60,29 +62,34 @@ const StyledLink = styled(Link)`
   grid-column: 1 / 2;
 `;
 
-export const Home: React.FC = () => (
-  <HomeWrapper>
-    <Main>
-      <h1>Falling Block Puzzle</h1>
-      <p>Select under games!</p>
-      <MenuList>
-        <StyledLink to={`${process.env.ROOT_PATH}p5`}>
-          <p>START!</p>
-          on P5
-        </StyledLink>
-        <MenuItems1>
-          <p>START!</p>
-          on DOM
-          <br />
-          (under construction)
-        </MenuItems1>
-        <MenuItems2>
-          <p>START!</p>
-          on canvas
-          <br />
-          (under construction)
-        </MenuItems2>
-      </MenuList>
-    </Main>
-  </HomeWrapper>
-);
+export const Home: React.FC = () => {
+  useEffect(() => {
+    removeEvent();
+  }, []);
+  return (
+    <HomeWrapper>
+      <Main>
+        <h1>Falling Block Puzzle</h1>
+        <p>Select under games!</p>
+        <MenuList>
+          <StyledLink to={`${process.env.ROOT_PATH}p5`}>
+            <p>START!</p>
+            on P5
+          </StyledLink>
+          <MenuItems1>
+            <p>START!</p>
+            on DOM
+            <br />
+            (under construction)
+          </MenuItems1>
+          <MenuItems2>
+            <p>START!</p>
+            on ThreeJS
+            <br />
+            (under construction)
+          </MenuItems2>
+        </MenuList>
+      </Main>
+    </HomeWrapper>
+  );
+};

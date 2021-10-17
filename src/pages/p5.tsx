@@ -14,6 +14,8 @@ import { SceneGameover } from '@/application/application/scene/SceneGameover';
 
 import { Score } from '@/application/domain/parts/score/Score';
 
+import { addEvent } from './settings';
+
 export const P5: React.FC = () => {
   useEffect(() => {
     const ic = new InteractiveController();
@@ -64,8 +66,7 @@ export const P5: React.FC = () => {
     sc.start();
     // ページ遷移したらシーンを削除する
     window.onpopstate = () => { sc.remove(); };
-    window.ontouchstart = (e: Event) => e.preventDefault();
-    window.ontouchmove = (e: Event) => e.preventDefault();
+    addEvent();
   }, []);
 
   return (
