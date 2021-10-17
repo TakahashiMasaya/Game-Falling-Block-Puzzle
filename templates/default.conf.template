@@ -1,0 +1,15 @@
+# this file is imported from /etc/nginx/nginx.conf
+# image: nginx:latest
+
+server {
+  listen 80;
+  server_name localhost;
+  root /usr/share/nginx/html;
+
+  location / {
+    index index.html;
+  }
+  location ~ ^\/g_fbp\/+ {
+    error_page 404 /g_fbp/index.html;
+  }
+}
