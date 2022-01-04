@@ -64,6 +64,9 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': [
       'error',
     ],
+    'react/function-component-definition': [
+      1, { namedComponents: 'arrow-function' },
+    ],
     'react/jsx-filename-extension': [
       'error',
       {
