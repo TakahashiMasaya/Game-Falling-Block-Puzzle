@@ -27,14 +27,14 @@ export class NextTetrominos {
   private readyToTetrominos = (): void => {
     this.list = [...new Array(this.stockQuantity)]
       .map(() => Math.trunc(Math.random() * this.tetrominoQuantity));
-  }
+  };
 
   /**
    * リストを取得する
    *
    * @return {*}  {number[]}
    */
-  public getList = (): number[] => this.list
+  public getList = (): number[] => this.list;
 
   /**
    * 次の数字を取得する
@@ -46,5 +46,5 @@ export class NextTetrominos {
     const next = this.list.shift();
     this.list.push(Math.trunc(Math.random() * this.tetrominoQuantity));
     return next || 0;
-  }
+  };
 }

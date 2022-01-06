@@ -21,7 +21,7 @@ export class SceneStart implements Scene {
     this.interactivePresenter = interactivePresenter;
   }
 
-  public start = () => {}
+  public start = () => {};
 
   public move = () => {
     this.transferredController.transfer();
@@ -40,7 +40,7 @@ export class SceneStart implements Scene {
       width: 30,
       height: 30,
     }];
-  }
+  };
 
   public draw = () => this.drawing;
 

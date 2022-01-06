@@ -108,20 +108,44 @@ export class ScenePlaying implements Scene {
       stroke: 0,
       fill: getFillColor(cu),
     }] : ar), [])).flat();
+
+    const drawingTetromino = () => tetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+      type: 'image',
+      position: {
+        x: (x * tetrominoWidth) + 30 + (fx * tetrominoWidth),
+        y: (y * tetrominoWidth) + 50 + (fy * tetrominoWidth),
+      },
+      width: tetrominoWidth,
+      height: tetrominoWidth,
+      stroke: 0,
+      fill: getFillColor(cu),
+    }] : ar), [])).flat();
+
+    const drawingNextTetromino = () => nextTetromino?.map<Image[]>((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+      type: 'image',
+      position: { x: (x * 20) + 300, y: (y * 20) + 120 },
+      width: 20,
+      height: 20,
+      stroke: 0,
+      fill: getFillColor(cu),
+    }] : ar), [])).flat();
+
     // Tetrominoを表示
+    if (drawingTetromino() !== null) {
+      this.drawing = [
+        ...this.drawing,
+        ...drawingTetromino(),
+      ];
+    }
+    // NextTetrominoを表示
+    if (drawingNextTetromino() !== null) {
+      this.drawing = [
+        ...this.drawing,
+        ...drawingNextTetromino(),
+      ];
+    }
     this.drawing = [
       ...this.drawing,
-      ...tetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
-        type: 'image',
-        position: {
-          x: (x * tetrominoWidth) + 30 + (fx * tetrominoWidth),
-          y: (y * tetrominoWidth) + 50 + (fy * tetrominoWidth),
-        },
-        width: tetrominoWidth,
-        height: tetrominoWidth,
-        stroke: 0,
-        fill: getFillColor(cu),
-      }] : ar), [])).flat(),
       {
         type: 'text',
         position: { x: 330, y: 100 },
@@ -130,14 +154,6 @@ export class ScenePlaying implements Scene {
         width: 30,
         height: 30,
       },
-      ...nextTetromino?.map<Image[]>((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
-        type: 'image',
-        position: { x: (x * 20) + 300, y: (y * 20) + 120 },
-        width: 20,
-        height: 20,
-        stroke: 0,
-        fill: getFillColor(cu),
-      }] : ar), [])).flat(),
       {
         type: 'text',
         position: { x: 330, y: 250 },

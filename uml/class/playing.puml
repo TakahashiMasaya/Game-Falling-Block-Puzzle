@@ -120,6 +120,9 @@ namespace Application {
 
     interface SceneInterface {
       + start(): void
+      + move(): void
+      + draw(): void
+      + isEnd(): boolean
     }
     class SceneStart{
       - transferredController: TransferredController

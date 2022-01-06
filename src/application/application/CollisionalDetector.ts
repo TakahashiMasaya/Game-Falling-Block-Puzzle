@@ -33,7 +33,7 @@ export class CollisionalDetector {
       }
     }
     return false;
-  }
+  };
 
   /**
    * field・pieceの衝突判定
@@ -53,5 +53,5 @@ export class CollisionalDetector {
       field,
     });
     return isFieldCollision;
-  }
+  };
 }

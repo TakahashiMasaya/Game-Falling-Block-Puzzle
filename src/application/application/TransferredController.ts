@@ -55,7 +55,7 @@ export class TransferredController {
       spinLeft: (sl) ? tsl + 1 : 0,
       enter: (e) ? te + 1 : 0,
     };
-  }
+  };
 
   getStatus = () => {
     const {
@@ -70,7 +70,7 @@ export class TransferredController {
       spinLeft: (spinLeft === 1), // 単射
       enter: (enter === 1), // 単射
     };
-  }
+  };
 
   reset = () => {
     this.status = {
@@ -83,5 +83,5 @@ export class TransferredController {
       enter: 0,
     };
     this.interactiveController?.reset();
-  }
+  };
 }

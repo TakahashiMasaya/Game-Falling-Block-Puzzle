@@ -43,7 +43,7 @@ export class ActiveTetromino {
     this.status = {
       x, y, tetromino: this.tetromino.getPiece(),
     };
-  }
+  };
 
   /**
    * 引数に合わせて次のTetrominoの位置、状態を取得する
@@ -66,7 +66,7 @@ export class ActiveTetromino {
     return {
       x, y, tetromino,
     };
-  }
+  };
 
   /**
    * 引数にあわせて、Tetrominoの位置、状態を設定する
@@ -90,7 +90,7 @@ export class ActiveTetromino {
     this.status = {
       x, y, tetromino,
     };
-  }
+  };
 
   /**
    * Tetrominoを下に位置する
@@ -104,7 +104,7 @@ export class ActiveTetromino {
       ...this.status,
       y: y + 1,
     };
-  }
+  };
 
   /**
    * Tetrominoの中身をクリアする
@@ -117,7 +117,7 @@ export class ActiveTetromino {
       ...this.status,
       tetromino: [],
     };
-  }
+  };
 
   /**
    * Tetrominoの位置、状態を取得

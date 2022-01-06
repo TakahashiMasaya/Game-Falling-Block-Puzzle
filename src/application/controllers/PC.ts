@@ -93,5 +93,5 @@ export class PC implements Controller {
       }
       return false;
     }, false);
-  }
+  };
 }

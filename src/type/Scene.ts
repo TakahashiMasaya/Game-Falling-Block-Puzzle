@@ -1,8 +1,8 @@
 export interface Scene {
-  isEnd(): boolean;
-  start(): void;
-  move(): void;
-  draw(): any;
+  isEnd: () => boolean;
+  start: () => void;
+  move: () => void;
+  draw: () => void;
 }
 
 export type Text = {

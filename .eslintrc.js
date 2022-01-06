@@ -6,6 +6,7 @@ module.exports = {
     'p5js/p5': true,
   },
   extends: [
+    'eslint:recommended',
     'plugin:react/recommended',
     'airbnb',
     'plugin:p5js/p5',
@@ -56,16 +57,15 @@ module.exports = {
     },
   },
   rules: {
-    'import/extensions': 0,
-    'import/prefer-default-export': 0,
+    'import/extensions': 'off', // not extensions
+    'import/prefer-default-export': 'off', // not use 'export default'
+    'import/no-extraneous-dependencies': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
-    'import/no-extraneous-dependencies': 0,
-    'no-use-before-define': 'off',
-    '@typescript-eslint/no-use-before-define': [
-      'error',
-    ],
+    'class-methods-use-this': 'off',
     'react/function-component-definition': [
-      1, { namedComponents: 'arrow-function' },
+      'error', {
+        namedComponents: 'arrow-function',
+      },
     ],
     'react/jsx-filename-extension': [
       'error',

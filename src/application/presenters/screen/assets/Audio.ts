@@ -1,9 +1,5 @@
 export class AudioGroup {
-  constructor() {
+  // public get = ({ texture }: { texture: string }) => {
 
-  }
-
-  public get = ({ texture }: { texture: string }) => {
-
-  }
+  // };
 }

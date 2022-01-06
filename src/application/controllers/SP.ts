@@ -44,5 +44,5 @@ export class SP implements Controller {
     document.querySelector('.enter')?.addEventListener('touchenter', enter, false);
     document.querySelector('.enter')?.addEventListener('touchmove', enter, false);
     document.querySelector('.enter')?.addEventListener('touchend', offEnter, false);
-  }
+  };
 }

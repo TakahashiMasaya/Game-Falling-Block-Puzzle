@@ -69,5 +69,5 @@ export class SP implements Controller {
     buttons?.spinRight.touchEnded(offSpinRight);
     buttons?.enter.touchStarted(enter);
     buttons?.enter.touchEnded(offEnter);
-  }
+  };
 }

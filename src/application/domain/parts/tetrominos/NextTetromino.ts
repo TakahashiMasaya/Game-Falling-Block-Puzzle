@@ -39,10 +39,10 @@ export class NextTetromino {
       default:
         this.tetromino = new ITetromino();
     }
-  }
+  };
 
   get = () => ({
     type: this.type,
     tetromino: this.tetromino?.getPiece() || [[]],
-  })
+  });
 }
