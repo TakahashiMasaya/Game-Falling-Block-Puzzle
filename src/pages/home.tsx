@@ -42,14 +42,6 @@ const MenuItems1 = styled.div`
   border: 1px solid;
   color: rgba(255, 255, 255, 0.2);
   background-color: rgba(255, 255, 255, 0.2);
-  grid-row: 1 / 2;
-`;
-const MenuItems2 = styled.div`
-  ${common}
-  border: 1px solid;
-  color: rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.2);
-  grid-column: 1 / 2;
   grid-row: 2 / 2;
 `;
 const StyledLink = styled(Link)`
@@ -60,6 +52,15 @@ const StyledLink = styled(Link)`
   background-color: rgba(255, 255, 255, 0.5);
   grid-row: 1 / 2;
   grid-column: 1 / 2;
+`;
+const StyledLink2 = styled(Link)`
+  ${common}
+  border: 3px solid;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.5);
+  grid-row: 1 / 2;
+  grid-column: 2 / 2;
 `;
 
 export const Home: React.FC = () => {
@@ -72,22 +73,20 @@ export const Home: React.FC = () => {
         <h1>Falling Block Puzzle</h1>
         <p>Select under games!</p>
         <MenuList>
-          <StyledLink to={`${process.env.ROOT_PATH}p5`}>
+          <StyledLink to={`${process.env.ROOT_PATH}threejs`}>
+            <p>START!</p>
+            on ThreeJS
+          </StyledLink>
+          <StyledLink2 to={`${process.env.ROOT_PATH}p5`}>
             <p>START!</p>
             on P5
-          </StyledLink>
+          </StyledLink2>
           <MenuItems1>
             <p>START!</p>
             on DOM
             <br />
             (under construction)
           </MenuItems1>
-          <MenuItems2>
-            <p>START!</p>
-            on ThreeJS
-            <br />
-            (under construction)
-          </MenuItems2>
         </MenuList>
       </Main>
     </HomeWrapper>

@@ -1,5 +1,4 @@
 import { TransferredController } from '@/application/application/TransferredController';
-import { InteractivePresenter } from '@/application/interactor/InteractivePresenter';
 import { Score } from '@/application/domain/parts/score/Score';
 
 export type TTransferredController = {
@@ -14,7 +13,6 @@ export type TTransferredController = {
 
 export type paramScene = {
   transferredController: TransferredController,
-  interactivePresenter? : InteractivePresenter,
   score? : Score,
 }
 

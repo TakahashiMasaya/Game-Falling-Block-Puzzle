@@ -1,8 +1,9 @@
 import { paramScene } from '@/type/Application';
-import { Scene, Text, Image } from '@/type/Scene';
+import {
+  Scene, Text, TextInPlaying, Image,
+} from '@/type/Scene';
 import { Piece } from '@/type/Piece';
 import { TransferredController } from '@/application/application/TransferredController';
-import { InteractivePresenter } from '@/application/interactor/InteractivePresenter';
 import { Score } from '@/application/domain/parts/score/Score';
 
 import { Field10x20 } from '@/application/domain/parts/field/Field10x20';
@@ -26,15 +27,13 @@ type typeControllButtons = {
 export class ScenePlaying implements Scene {
   private transferredController : TransferredController;
 
-  private interactivePresenter?: InteractivePresenter;
-
   private score?: Score;
 
   private removeLines: number = 0;
 
   private end: boolean = false;
 
-  private drawing: (Text | Image)[] = [];
+  private drawing: (Text | TextInPlaying | Image)[] = [];
 
   private tetrominoCollidedTimes: number = 0;
 
@@ -58,11 +57,9 @@ export class ScenePlaying implements Scene {
 
   constructor({
     transferredController,
-    interactivePresenter,
     score,
   }: paramScene) {
     this.transferredController = transferredController;
-    this.interactivePresenter = interactivePresenter;
     this.score = score;
   }
 
@@ -80,8 +77,8 @@ export class ScenePlaying implements Scene {
           return '#444444';
         case 'i':
           return '#888800';
-        case 'ｊ':
-          return '#0000aa';
+        case 'j':
+          return '#6666ff';
         case 'l':
           return '#00aaaa';
         case 'o':
@@ -98,43 +95,35 @@ export class ScenePlaying implements Scene {
     };
 
     const { tetromino: nextTetromino } = this.nextTetromino;
-    const tetrominoWidth = 18;
-    // fieldを表示
+    // field・積みTetrominoを表示
     this.drawing = f.getStatus()?.map((rows: string[], y) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
-      type: 'image',
-      position: { x: x * tetrominoWidth + 30, y: y * tetrominoWidth + 50 },
-      width: tetrominoWidth,
-      height: tetrominoWidth,
-      stroke: 0,
+      type: 'tetrominos',
+      position: { x, y },
       fill: getFillColor(cu),
     }] : ar), [])).flat();
 
-    const drawingTetromino = () => tetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
-      type: 'image',
+    // ActiveTetromino
+    const drawingActiveTetromino = () => tetromino?.map((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
+      type: 'activeTetromino',
       position: {
-        x: (x * tetrominoWidth) + 30 + (fx * tetrominoWidth),
-        y: (y * tetrominoWidth) + 50 + (fy * tetrominoWidth),
+        x: x + fx,
+        y: y + fy,
       },
-      width: tetrominoWidth,
-      height: tetrominoWidth,
-      stroke: 0,
       fill: getFillColor(cu),
     }] : ar), [])).flat();
 
+    // NextTetromino
     const drawingNextTetromino = () => nextTetromino?.map<Image[]>((rows: string[], y: number) => rows.reduce<Image[]>((ar, cu: string, x: number) => ((cu !== '0') ? [...ar, {
-      type: 'image',
-      position: { x: (x * 20) + 300, y: (y * 20) + 120 },
-      width: 20,
-      height: 20,
-      stroke: 0,
+      type: 'nextTetromino',
+      position: { x, y },
       fill: getFillColor(cu),
     }] : ar), [])).flat();
 
     // Tetrominoを表示
-    if (drawingTetromino() !== null) {
+    if (drawingActiveTetromino() !== null) {
       this.drawing = [
         ...this.drawing,
-        ...drawingTetromino(),
+        ...drawingActiveTetromino(),
       ];
     }
     // NextTetrominoを表示
@@ -147,44 +136,24 @@ export class ScenePlaying implements Scene {
     this.drawing = [
       ...this.drawing,
       {
-        type: 'text',
-        position: { x: 330, y: 100 },
+        type: 'textNextInPlaying',
         value: 'Next',
-        fill: 255,
-        width: 30,
-        height: 30,
       },
       {
-        type: 'text',
-        position: { x: 330, y: 250 },
+        type: 'textScoreInPlaying',
         value: 'Score',
-        fill: 255,
-        width: 30,
-        height: 30,
       },
       {
-        type: 'text',
-        position: { x: 330, y: 280 },
+        type: 'textScoreValueInPlaying',
         value: this.score?.get().toString(),
-        fill: 255,
-        width: 30,
-        height: 30,
       },
       {
-        type: 'text',
-        position: { x: 330, y: 350 },
+        type: 'textLinesInPlaying',
         value: 'Lines',
-        fill: 255,
-        width: 30,
-        height: 30,
       },
       {
-        type: 'text',
-        position: { x: 330, y: 380 },
+        type: 'textLinesValueInPlaying',
         value: this.removeLines.toString(),
-        fill: 255,
-        width: 30,
-        height: 30,
       },
     ];
   };

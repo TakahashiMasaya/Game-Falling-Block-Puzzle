@@ -9,6 +9,14 @@ namespace Presenters {
       + getButtons(): Buttons
     }
   }
+  namespace ThreeJS {
+    class ThreeJS {
+      - buttons: p5.Element[]
+      + styledButtons(): void
+      + adjustButtons(): void
+      + getButtons(): Buttons
+    }
+  }
   namespace Screen {
     class Dom {
       - mainController: Dom
@@ -33,6 +41,16 @@ namespace Presenters {
       - images: {'player': { src:'images/shooting_player.png', rate:1.00, obj:new Image}}
       + createAssets(): void
       + get({ texture: string }): Image
+    }
+
+    ' 画面表示用に位置、サイズを変換する
+    class TransferringScreen {
+      - window: { width: number, height: number }
+      - screen: { width: number, height: number }
+      - rate: number
+      + init({ window: window, screen: screen }): void
+      + windowRotate(): void
+      + transfer(): { x: number, y: number, width: number, height: number }[] 
     }
 
     Canvas <--- InteractorForPresenter.InteractivePresenter
@@ -110,10 +128,20 @@ namespace Application {
         - sketch(): void
         + start(): void
       }
+      class SceneChangerThreeJS{
+        - list: (SceneStart | ScenePlaying | SceneGameover)[]
+        - canvasElement: HTMLElement
+        - interactiveController: InteractiveController
+        - isPlaying: boolean
+        - transferredScreen: TransferredScreen | null
+        - sketch(): void
+        + start(): void
+      }
 
       class SceneChangerCanvas{
       }
 
+      SceneChanger <|-- SceneChangerThreeJS
       SceneChanger <|-- SceneChangerP5
       SceneChanger <|-- SceneChangerCanvas
     }
@@ -126,7 +154,6 @@ namespace Application {
     }
     class SceneStart{
       - transferredController: TransferredController
-      - interactivePresenter: InteractivePresenter
       + start()
       + move()
       + draw()
@@ -138,7 +165,6 @@ namespace Application {
       - soundForReachedTetromino: string
       - status: 'start'|'dropTetromino'|'droppingTetromino'|'removeFullRow'|'updateField'|'gameover'
       - InteractiveController: TransferredController
-      - InteractivePresenter: InteractivePresenter
       - setDrawing(): void
       - moveDropping(): void
       - moveHorizontally(): void
@@ -149,7 +175,6 @@ namespace Application {
     }
     class SceneGameover{
       - transferredController: TransferredController
-      - interactivePresenter: InteractivePresenter
       + start()
       + move()
       + draw()
@@ -163,16 +188,6 @@ namespace Application {
   ' tetrominoとfieldで衝突判定をする
   class CollisionalDetector {
     + isCollision({ tetromino: Piece, field: Field }): boolean
-  }
-
-  ' 画面表示用に位置、サイズを変換する
-  class TranferringScreen {
-    - window: { width: number, height: number }
-    - screen: { width: number, height: number }
-    - rate: number
-    + init({ window: window, screen: screen }): void
-    + windowRotate(): void
-    + transfer(): { x: number, y: number, width: number, height: number }[] 
   }
 
   ' 次のtetrominoをセットする
@@ -202,17 +217,13 @@ Application.Scene.SceneStart ---> Application.TransferredController
 Application.Scene.ScenePlaying ---> Application.TransferredController
 Application.Scene.SceneGameover ---> Application.TransferredController
 
-Application.Scene.Changer.SceneChangerP5 --> Application.Scene.SceneStart
 Application.Scene.ScenePlaying --> Application.NextTetrominos
-Application.Scene.ScenePlaying --> Application.TranferringScreen
-Application.Scene.SceneGameover --> Application.TranferringScreen 
+Application.Scene.Changer.SceneChangerP5 --> Presenters.Screen.TransferringScreen
 Application.Scene.ScenePlaying --> Application.CollisionalDetector
 
-Application.Scene.Changer.SceneChangerP5 ---> Application.Scene.ScenePlaying
-Application.Scene.Changer.SceneChangerP5 ---> Application.Scene.SceneGameover
-Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.SceneStart
-Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.ScenePlaying
-Application.Scene.Changer.SceneChangerCanvas ---> Application.Scene.SceneGameover
+Application.Scene.Changer ---> Application.Scene.SceneStart
+Application.Scene.Changer ---> Application.Scene.ScenePlaying
+Application.Scene.Changer ---> Application.Scene.SceneGameover
 Application.Scene.Changer.SceneChangerCanvas ---> InteractorForPresenter.InteractivePresenter
 
 namespace Controllers {
@@ -329,5 +340,6 @@ Application.Scene.ScenePlaying ---> Domain.Parts.FieldInterface
 Application.Scene.ScenePlaying ---> Domain.Parts.ScoreInterface
 
 Presenters.P5.P5 <--- Application.Scene.Changer.SceneChangerP5
+Presenters.ThreeJS.ThreeJS <--- Application.Scene.Changer.SceneChangerThreeJS
 
 @enduml
