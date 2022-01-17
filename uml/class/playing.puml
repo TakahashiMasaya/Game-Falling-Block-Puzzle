@@ -3,18 +3,46 @@
 namespace Presenters {
   namespace P5 {
     class P5 {
+      - p5: p5
       - buttons: p5.Element[]
-      + styledButtons(): void
+      - styledButtons(): void
       + adjustButtons(): void
       + getButtons(): Buttons
     }
   }
   namespace ThreeJS {
     class ThreeJS {
-      - buttons: p5.Element[]
-      + styledButtons(): void
-      + adjustButtons(): void
-      + getButtons(): Buttons
+      - scene: THREE.Scene;
+      - camera: THREE.PerspectiveCamera;
+      - renderer: THREE.WebGLRenderer;
+      - orbitControls: OrbitControls;
+      - textMaterials: THREE.MeshBasicMaterial[] = [];
+      - counterMaterials: TCounterMaterials = [];
+      - tetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshToonMaterial>[] = [];
+      - tetrominoMaterials: THREE.MeshToonMaterial[] = [];
+      - nextTetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshToonMaterial>[] = [];
+      - nextTetrominoMaterials: THREE.MeshToonMaterial[] = [];
+      - buttonMaterials: THREE.MeshLambertMaterial[] = [];
+      - groupTetromino: THREE.Group;
+      - groupNextTetromino: THREE.Group;
+      - texts: TInitTexts;
+      - counters: TInitCounters;
+      - tetrominos: TInitTetrominos;
+      - nextTetrominos: TInitTetrominos;
+      - buttons: TInitButtons;
+      - meshObjects: THREE.Object3D<THREE.Event>[] = [];
+      - createText(): void
+      - createCounter(): void
+      - createButton(): void
+      - createTetrominos(): void
+      - createNextTetrominos(): void
+      + renderingText(): void
+      + renderingCounter(): void
+      + renderingTetromino(): void
+      + renderingNextTetromino(): void
+      + renderingUnVisibleAllCounters(): void
+      + renderingClearAllTetrominos(): void
+      + render(): void
     }
   }
   namespace Screen {
@@ -130,11 +158,14 @@ namespace Application {
         + remove(): void
       }
       class SceneChangerThreeJS{
-        - list: (SceneStart | ScenePlaying | SceneGameover)[]
-        - canvasElement: HTMLElement
-        - interactiveController: InteractiveController
-        - isPlaying: boolean
-        - transferredScreen: TransferredScreen | null
+        - list: Scene[]
+        - interactiveController: InteractiveController;
+        - isPlaying: boolean = false;
+        - threeJS: ThreeJS;
+        - animationID: number = 0;
+        - sl: Generator<Scene, void, unknown>;
+        - s: any;
+        - pressingEnterKeyCount: number = 0;
         - draw(): void
         + start(): void
         + remove(): void
@@ -238,15 +269,37 @@ namespace Controllers {
   Controller <|-- SP
   InteractorForController.InteractiveController <--- Controller
   namespace p5 {
-    class PC {}
-    class SP {}
+    class PC {
+      - p5: p5
+      + setAction: void
+    }
+    class SP {
+      - p5: p5
+      + setAction: void
+    }
   }
   Controller <|-- Controllers.p5.PC
   Controller <|-- Controllers.p5.SP
 
   namespace ThreeJS {
-    class PC {}
-    class SP {}
+    class PC {
+      - raycaster: THREE.Raycaster;
+      - vector2: THREE.Vector2;
+      - camera: THREE.PerspectiveCamera;
+      - meshButtons: THREE.Object3D[];
+      - onButtonMaterial(): void
+      - offButtonMaterial(): void
+      - activeButtonMaterial(): void
+      + setAction(): void
+    }
+    class SP {
+      - raycaster: THREE.Raycaster;
+      - vector2: THREE.Vector2;
+      - camera: THREE.PerspectiveCamera;
+      - meshButtons: THREE.Object3D[];
+      - activeButtonMaterial(): void
+      + setAction(): void
+    }
   }
   Controller <|-- Controllers.ThreeJS.PC
   Controller <|-- Controllers.ThreeJS.SP

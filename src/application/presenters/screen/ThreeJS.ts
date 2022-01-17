@@ -22,10 +22,6 @@ export class ThreeJS {
 
   private renderer: THREE.WebGLRenderer;
 
-  private width: number;
-
-  private height: number;
-
   private orbitControls: OrbitControls;
 
   private textMaterials: THREE.MeshBasicMaterial[] = [];
@@ -59,8 +55,6 @@ export class ThreeJS {
   private meshObjects: THREE.Object3D<THREE.Event>[] = [];
 
   constructor({
-    width,
-    height,
     scene,
     camera,
     renderer,
@@ -70,8 +64,6 @@ export class ThreeJS {
     tetrominos,
     nextTetrominos,
   }: {
-    width: number
-    height: number
     scene: THREE.Scene
     camera: THREE.PerspectiveCamera
     renderer: THREE.WebGLRenderer
@@ -81,8 +73,6 @@ export class ThreeJS {
     tetrominos: TInitTetrominos
     nextTetrominos: TInitTetrominos
   }) {
-    this.width = width || window.innerWidth;
-    this.height = height || window.innerHeight;
     this.scene = scene;
     this.camera = camera;
     this.renderer = renderer;

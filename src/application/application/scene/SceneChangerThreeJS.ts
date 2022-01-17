@@ -106,8 +106,6 @@ export class SceneChangerThreeJS {
     const vector2 = new THREE.Vector2();
 
     this.threeJS = new ThreeJS({
-      width: window.innerWidth,
-      height: window.innerHeight,
       scene,
       camera,
       renderer,
