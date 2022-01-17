@@ -4,74 +4,16 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-
-type TInitText = {
-  name: string
-  text: string
-  size: number
-  x: number
-  y: number
-  z: number
-  color?: string
-}
-
-type TInitTexts = TInitText[]
-
-type TInitCounter = {
-  name: string
-  default: string
-  size: number
-  x: number
-  y: number
-  z: number
-  color?: string
-}
-
-type TInitCounters = TInitCounter[]
-
-type TInitTetrominos = {
-  size: number
-  tetrominos: {
-    opacity: number
-    x: number
-    y: number
-    color: string
-  }[]
-};
-
-type TInitButtons = {
-  [key: string]: {
-    x: number
-    y: number
-    width: number
-    height: number
-  }
-}
-
-type TCounterName = string;
-type TCounterDegit = THREE.MeshBasicMaterial
-type TCounterDegitMaterials = TCounterDegit[][]
-
-export type TCounterMaterial = {
-  name: TCounterName,
-  materials: TCounterDegitMaterials,
-}
-
-export type TCounterMaterials = TCounterMaterial[]
-
-export type TRenderingTetromino = {
-  fill: string
-  opacity: number
-}
-
-export type TRenderingText = {
-  name: string
-}
-
-export type TRenderingCounter = {
-  name: string,
-  value: string,
-}
+import {
+  TCounterMaterials,
+  TInitButtons,
+  TInitCounters,
+  TInitTetrominos,
+  TInitTexts,
+  TRenderingCounter,
+  TRenderingTetromino,
+  TRenderingText,
+} from '@/type/Presenters';
 
 export class ThreeJS {
   private scene: THREE.Scene;
@@ -194,7 +136,7 @@ export class ThreeJS {
 
   private createText = () => {
     const loader = new FontLoader();
-    loader.load('/test.json', (font) => {
+    loader.load('./test.json', (font) => {
       this.texts.forEach((text, i) => {
         const {
           name, text: tex, x, y, z, color, size,
@@ -219,7 +161,7 @@ export class ThreeJS {
 
   private createCounter = () => {
     const loader = new FontLoader();
-    loader.load('/test.json', (font) => {
+    loader.load('./test.json', (font) => {
       this.counters.forEach((counter) => {
         const {
           x, y, z, default: d, color, size, name,
