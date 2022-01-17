@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { Image, Scene, TextInPlaying } from '@/type/Scene';
-// import { paramSetAction, TBtPositions, TBtIndex } from '@/type/Controllers';
 import { InteractiveController } from '@/application/interactor/InteractiveController';
-import { ThreeJS, TRenderingTetromino } from '@/application/presenters/screen/ThreeJS';
+import { ThreeJS } from '@/application/presenters/screen/ThreeJS';
 import { PC } from '@/application/controllers/ThreeJS/PC';
 import { SP } from '@/application/controllers/ThreeJS/SP';
 import { paramSetAction } from '@/type/Controllers';
+import { TRenderingTetromino } from '@/type/Presenters';
 import { ScenePlaying } from './ScenePlaying';
 import { SceneStart } from './SceneStart';
 import { SceneGameover } from './SceneGameover';
