@@ -136,7 +136,7 @@ export class ThreeJS {
 
   private createText = () => {
     const loader = new FontLoader();
-    loader.load('./test.json', (font) => {
+    loader.load(`${process.env.ROOT_PATH}test.json`, (font) => {
       this.texts.forEach((text, i) => {
         const {
           name, text: tex, x, y, z, color, size,
@@ -161,7 +161,7 @@ export class ThreeJS {
 
   private createCounter = () => {
     const loader = new FontLoader();
-    loader.load('./test.json', (font) => {
+    loader.load(`${process.env.ROOT_PATH}test.json`, (font) => {
       this.counters.forEach((counter) => {
         const {
           x, y, z, default: d, color, size, name,
