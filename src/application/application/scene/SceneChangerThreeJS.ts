@@ -107,8 +107,8 @@ export class SceneChangerThreeJS {
           name: 'start',
           text: 'Play START!!',
           size: 30,
-          x: 200,
-          y: -300,
+          x: 100,
+          y: -250,
           z: 30,
           color: '0x111111',
         },
@@ -116,8 +116,8 @@ export class SceneChangerThreeJS {
           name: 'gameover',
           text: 'Gameover...',
           size: 30,
-          x: 200,
-          y: -300,
+          x: 100,
+          y: -250,
           z: 30,
           color: '0x999999',
         },
@@ -217,7 +217,7 @@ export class SceneChangerThreeJS {
       },
       // tetromino(フレーム含)を作成する
       tetrominos: {
-        size: 18,
+        size: 16,
         tetrominos: [...new Array(21)].map((arrayY, i) => {
           const size = 18;
           return [...new Array(12)].map((arrayX, j) => {
@@ -247,7 +247,7 @@ export class SceneChangerThreeJS {
         }).flat(),
       },
       nextTetrominos: {
-        size: 18,
+        size: 16,
         tetrominos: [...new Array(4)].map((arrayY, i) => {
           const size = 18;
           return [...new Array(4)].map((arrayX, j) => ({

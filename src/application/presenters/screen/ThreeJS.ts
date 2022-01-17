@@ -136,20 +136,20 @@ export class ThreeJS {
 
   private createText = () => {
     const loader = new FontLoader();
-    loader.load(`${process.env.ROOT_PATH}test.json`, (font) => {
+    loader.load(`${process.env.ROOT_PATH}helvetiker_regular.typeface.json`, (font) => {
       this.texts.forEach((text, i) => {
         const {
           name, text: tex, x, y, z, color, size,
         } = text;
         const textGeometry = new TextGeometry(tex, {
           size,
-          height: 1,
+          height: 3,
           font,
           curveSegments: 5,
           bevelSize: 1,
           bevelEnabled: true,
         });
-        this.textMaterials[i] = new THREE.MeshBasicMaterial();
+        this.textMaterials[i] = new THREE.MeshPhongMaterial();
         this.textMaterials[i].name = name;
         this.textMaterials[i].color.set(new Color(color));
         const t = new THREE.Mesh(textGeometry, this.textMaterials[i]);
@@ -161,7 +161,7 @@ export class ThreeJS {
 
   private createCounter = () => {
     const loader = new FontLoader();
-    loader.load(`${process.env.ROOT_PATH}test.json`, (font) => {
+    loader.load(`${process.env.ROOT_PATH}helvetiker_regular.typeface.json`, (font) => {
       this.counters.forEach((counter) => {
         const {
           x, y, z, default: d, color, size, name,
@@ -180,7 +180,7 @@ export class ThreeJS {
               bevelSize: 1,
               bevelEnabled: true,
             });
-            degitMaterials[j][k] = new THREE.MeshBasicMaterial();
+            degitMaterials[j][k] = new THREE.MeshPhongMaterial();
             degitMaterials[j][k].color.set(new Color(color));
             degitMaterials[j][k].visible = false;
             const mesh = new THREE.Mesh(counterGeometry, degitMaterials[j][k]);

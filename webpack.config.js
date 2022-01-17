@@ -1,5 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const CopyPlugin = require('copy-webpack-plugin');
+const path = require('path');
 
 const MODE = process.env.NODE_ENV || 'development';
 const enabledSourceMap = MODE === 'development';
@@ -29,7 +31,20 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: `${__dirname}/src/html/index.html`,
       filename: 'index.html',
-    })],
+    }),
+    new CopyPlugin({
+      // HACK:
+      // imageに関して、`${__dirname}/src/application/images`ではビルドエラーになる。
+      // ※GenerateSWとの相性の可能性がある
+      // ${path.resolve(__dirname, 'src')}指定したらビルドできた
+      patterns: [
+        {
+          from: `${path.resolve(__dirname, 'src')}/application/json`,
+          to: `${path.resolve(__dirname, 'dist')}`,
+        },
+      ],
+    }),
+  ],
   module: {
     rules: [
       {
