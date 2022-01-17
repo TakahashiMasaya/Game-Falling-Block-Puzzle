@@ -1421,9 +1421,9 @@
     "@types/node" "*"
 
 "@types/history@*":
-  version "4.7.10"
-  resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.10.tgz#992865313bb97d80eefa6aab5f2e4f1e10e84e86"
-  integrity sha512-kq1vceWANyZLEt/+hbTWSAjLNhhXYgUw6Ywi0KQ9C7pZJP4Qrr0xjSKb3t59e5GwWtk1L6zt5KTxjH4oPk2l/w==
+  version "4.7.11"
+  resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.11.tgz#56588b17ae8f50c53983a524fc3cc47437969d64"
+  integrity sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==
 
 "@types/hoist-non-react-statics@*":
   version "3.3.1"
@@ -3671,10 +3671,10 @@ dotenv-webpack@^7.0.3:
   dependencies:
     dotenv-defaults "^2.0.2"
 
-dotenv@^12.0.3:
-  version "12.0.3"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-12.0.3.tgz#362b83f866dfed8e540deaa5bbcb3c8ab401dcb6"
-  integrity sha512-RlOysyzyGiABgDFgITo5fRnMV1QStdoVvkXhnxQc5Or/CiQo52s2Bh6DVMvzZsmFQ9IrNxYHOC/gdpNwHsitnQ==
+dotenv@^14.0.0:
+  version "14.0.0"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-14.0.0.tgz#a993719c572eb39066922fa2031f0bc40ad88311"
+  integrity sha512-lO8c74ruYOG0hCK6fWT7t/PVxqcLKhfOqTahXZQN2UCyfN+ZTJmu48wRUVpkBAXsUGjPOG+ndTh8rjZxyf2xqw==
 
 dotenv@^8.1.0, dotenv@^8.2.0:
   version "8.6.0"
@@ -5957,9 +5957,9 @@ multicast-dns@^6.0.1:
     thunky "^1.0.2"
 
 nanoid@^3.1.30:
-  version "3.1.32"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.32.tgz#8f96069e6239cc0a9ae8c0d3b41a3b4933a88c0a"
-  integrity sha512-F8mf7R3iT9bvThBoW4tGXhXFHCctyCiUUPrWF8WaTqa3h96d9QybkSeba43XVOOE3oiLfkVDe4bT8MeGmkrTxw==
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.2.0.tgz#62667522da6673971cca916a6d3eff3f415ff80c"
+  integrity sha512-fmsZYa9lpn69Ad5eDn7FMcnnSR+8R34W9qJEijxYhTbfOWzr22n1QxCMzXLK+ODyW2973V3Fux959iQoUxzUIA==
 
 natural-compare@^1.4.0:
   version "1.4.0"

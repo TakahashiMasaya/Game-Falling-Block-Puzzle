@@ -10,7 +10,7 @@
     "build:prod": "NODE_ENV=production dotenv -e .env.production webpack",
     "build": "NODE_ENV=production dotenv -e .env webpack",
     "watch": "webpack -w",
-    "serve": "webpack serve",
+    "serve": "NODE_ENV=development dotenv -e .env.development webpack serve",
     "lint": "eslint --ext .ts,.tsx ./src ./tests",
     "test": "jest --coverage"
   },
@@ -36,7 +36,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^6.5.1",
-    "dotenv": "^12.0.3",
+    "dotenv": "^14.0.0",
     "dotenv-cli": "^4.1.1",
     "dotenv-webpack": "^7.0.3",
     "eslint": "^8.7.0",
