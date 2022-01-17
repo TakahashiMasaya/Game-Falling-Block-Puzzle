@@ -233,7 +233,6 @@ export class ScenePlaying implements Scene {
     });
   };
 
-  // eslint-disable-next-line class-methods-use-this
   public start = () => {};
 
   public move = () => {
