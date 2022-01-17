@@ -34,6 +34,9 @@ export class SceneChangerThreeJS {
 
   private s: any;
 
+  // Enterキーの長押しカウント
+  private pressingEnterKeyCount: number = 0;
+
   constructor({
     list,
     interactiveController,
@@ -74,7 +77,18 @@ export class SceneChangerThreeJS {
         right: this.interactiveController.right,
         spinRight: this.interactiveController.spinRight,
         spinLeft: this.interactiveController.spinLeft,
-        enter: this.interactiveController.enter,
+        enter: () => {
+          if (this.pressingEnterKeyCount !== 0) { return; }
+          this.interactiveController.enter();
+          if (this.s.constructor === ScenePlaying) {
+            this.isPlaying = !this.isPlaying;
+            return;
+          }
+          this.isPlaying = true;
+          this.pressingEnterKeyCount = this.pressingEnterKeyCount > 100
+            ? 100
+            : this.pressingEnterKeyCount += 1;
+        },
         offUp: this.interactiveController.offUp,
         offDown: this.interactiveController.offDown,
         offLeft: this.interactiveController.offLeft,
@@ -82,13 +96,8 @@ export class SceneChangerThreeJS {
         offSpinRight: this.interactiveController.offSpinRight,
         offSpinLeft: this.interactiveController.offSpinLeft,
         offEnter: () => {
+          this.pressingEnterKeyCount = 0;
           this.interactiveController.offEnter();
-          if (this.s.constructor !== ScenePlaying) { return; }
-          if (this.animationID === 0) {
-            this.resume();
-          } else {
-            this.stop();
-          }
         },
       },
     };
@@ -107,16 +116,16 @@ export class SceneChangerThreeJS {
           name: 'start',
           text: 'Play START!!',
           size: 30,
-          x: 100,
+          x: 80,
           y: -250,
           z: 30,
           color: '0x111111',
         },
         {
           name: 'gameover',
-          text: 'Gameover...',
+          text: 'Gameover\nPress Enter button',
           size: 30,
-          x: 100,
+          x: 20,
           y: -250,
           z: 30,
           color: '0x999999',
@@ -306,8 +315,8 @@ export class SceneChangerThreeJS {
 
   private draw = () => {
     this.animationID = window.requestAnimationFrame(this.draw);
-    this.s.move();
     if (this.s.constructor === SceneStart) {
+      this.s.move();
       // テキストの表示
       this.threeJS.renderingText({
         draw: [
@@ -318,6 +327,9 @@ export class SceneChangerThreeJS {
       });
     }
     if (this.s.constructor === ScenePlaying) {
+      if (this.isPlaying) {
+        this.s.move();
+      }
       // テキストの表示
       this.threeJS.renderingText({
         draw: [
@@ -378,6 +390,7 @@ export class SceneChangerThreeJS {
       });
     }
     if (this.s.constructor === SceneGameover) {
+      this.s.move();
       this.threeJS.renderingClearAllTetrominos();
       // テキストの表示
       this.threeJS.renderingText({
@@ -398,14 +411,10 @@ export class SceneChangerThreeJS {
       this.s = this.sl.next().value;
     }
     if (!this.s) {
-      // 最初に戻り再開する
-      this.sl = this.sceneList();
-      this.s = this.sl.next().value;
+      // アニメーションを切って、再開する
+      window.cancelAnimationFrame(this.animationID);
+      this.start();
     }
-  };
-
-  private resume = () => {
-    this.draw();
   };
 
   /**
@@ -419,16 +428,12 @@ export class SceneChangerThreeJS {
     this.draw();
   };
 
-  private stop = () => {
-    window.cancelAnimationFrame(this.animationID);
-    this.animationID = 0;
-  };
-
   /**
    * ThreeJSを削除する
    *
    * @memberof SceneChangerThreeJS
    */
   public remove = () => {
+    window.cancelAnimationFrame(this.animationID);
   };
 }

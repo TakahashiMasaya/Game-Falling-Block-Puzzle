@@ -127,6 +127,7 @@ namespace Application {
         - transferredScreen: TransferredScreen | null
         - sketch(): void
         + start(): void
+        + remove(): void
       }
       class SceneChangerThreeJS{
         - list: (SceneStart | ScenePlaying | SceneGameover)[]
@@ -134,8 +135,9 @@ namespace Application {
         - interactiveController: InteractiveController
         - isPlaying: boolean
         - transferredScreen: TransferredScreen | null
-        - sketch(): void
+        - draw(): void
         + start(): void
+        + remove(): void
       }
 
       class SceneChangerCanvas{
@@ -241,6 +243,13 @@ namespace Controllers {
   }
   Controller <|-- Controllers.p5.PC
   Controller <|-- Controllers.p5.SP
+
+  namespace ThreeJS {
+    class PC {}
+    class SP {}
+  }
+  Controller <|-- Controllers.ThreeJS.PC
+  Controller <|-- Controllers.ThreeJS.SP
 }
 
 namespace Domain {
