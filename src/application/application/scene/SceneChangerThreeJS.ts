@@ -72,13 +72,32 @@ export class SceneChangerThreeJS {
 
     const action: paramSetAction = {
       action: {
-        up: this.interactiveController.up,
-        down: this.interactiveController.down,
-        left: this.interactiveController.left,
-        right: this.interactiveController.right,
-        spinRight: this.interactiveController.spinRight,
-        spinLeft: this.interactiveController.spinLeft,
+        up: () => {
+          this.interactiveController.up();
+          this.threeJS.setActiveColorButton('up');
+        },
+        down: () => {
+          this.interactiveController.down();
+          this.threeJS.setActiveColorButton('down');
+        },
+        left: () => {
+          this.interactiveController.left();
+          this.threeJS.setActiveColorButton('left');
+        },
+        right: () => {
+          this.interactiveController.right();
+          this.threeJS.setActiveColorButton('right');
+        },
+        spinRight: () => {
+          this.interactiveController.spinRight();
+          this.threeJS.setActiveColorButton('spinRight');
+        },
+        spinLeft: () => {
+          this.interactiveController.spinLeft();
+          this.threeJS.setActiveColorButton('spinLeft');
+        },
         enter: () => {
+          this.threeJS.setActiveColorButton('enter');
           if (this.pressingEnterKeyCount !== 0) { return; }
           this.interactiveController.enter();
           if (this.s.constructor === ScenePlaying) {
@@ -90,15 +109,34 @@ export class SceneChangerThreeJS {
             ? 100
             : this.pressingEnterKeyCount += 1;
         },
-        offUp: this.interactiveController.offUp,
-        offDown: this.interactiveController.offDown,
-        offLeft: this.interactiveController.offLeft,
-        offRight: this.interactiveController.offRight,
-        offSpinRight: this.interactiveController.offSpinRight,
-        offSpinLeft: this.interactiveController.offSpinLeft,
+        offUp: () => {
+          this.interactiveController.offUp();
+          this.threeJS.resetColorAllButton();
+        },
+        offDown: () => {
+          this.interactiveController.offDown();
+          this.threeJS.resetColorAllButton();
+        },
+        offLeft: () => {
+          this.interactiveController.offLeft();
+          this.threeJS.resetColorAllButton();
+        },
+        offRight: () => {
+          this.interactiveController.offRight();
+          this.threeJS.resetColorAllButton();
+        },
+        offSpinRight: () => {
+          this.interactiveController.offSpinRight();
+          this.threeJS.resetColorAllButton();
+        },
+        offSpinLeft: () => {
+          this.interactiveController.offSpinLeft();
+          this.threeJS.resetColorAllButton();
+        },
         offEnter: () => {
           this.pressingEnterKeyCount = 0;
           this.interactiveController.offEnter();
+          this.threeJS.resetColorAllButton();
         },
       },
     };
@@ -110,6 +148,8 @@ export class SceneChangerThreeJS {
       scene,
       camera,
       renderer,
+      raycaster,
+      vector2,
       texts: [
         {
           name: 'start',
@@ -279,19 +319,13 @@ export class SceneChangerThreeJS {
     // 入力デバイスを設定する
     // PCはキーボードとマウスで操作させる
     const pc = new PC({
-      raycaster,
-      vector2,
-      camera,
-      meshButtons,
+      focussedButtons: this.threeJS.focussedButtons,
     });
     pc.setAction({
       ...action,
     });
     const sp = new SP({
-      raycaster,
-      vector2,
-      camera,
-      meshButtons,
+      focussedButtons: this.threeJS.focussedButtons,
     });
     sp.setAction({
       ...action,

@@ -1,45 +1,17 @@
-import * as THREE from 'three';
 import { Controller } from '@/application/controllers/Controller';
 import { paramSetAction } from '@/type/Controllers';
+import { TFocussedButtons } from '@/type/Presenters';
 
 export class SP implements Controller {
-  private raycaster: THREE.Raycaster;
-
-  private vector2: THREE.Vector2;
-
-  private camera: THREE.PerspectiveCamera;
-
-  private meshButtons: THREE.Object3D[];
+  private focussedButtons: TFocussedButtons;
 
   constructor({
-    raycaster,
-    vector2,
-    camera,
-    meshButtons,
+    focussedButtons,
   }: {
-    raycaster: THREE.Raycaster
-    vector2: THREE.Vector2
-    camera: THREE.PerspectiveCamera
-    meshButtons: THREE.Object3D<THREE.Event>[]
+    focussedButtons: TFocussedButtons
   }) {
-    this.raycaster = raycaster;
-    this.vector2 = vector2;
-    this.camera = camera;
-    this.meshButtons = meshButtons;
+    this.focussedButtons = focussedButtons;
   }
-
-  private activeButtonMaterial = (
-    intersect: THREE.Intersection<THREE.Object3D<THREE.Event>>,
-  ): THREE.MeshLambertMaterial | null => {
-    if (!intersect.object.userData.draggable) { return null; }
-    // TODO: 強引にTHREE.Object3D<THREE.Event>[]
-    // からTHREE.MeshToonMaterialへキャスト
-    const buttonMaterial = this.meshButtons.find(
-      (m) => ((m as THREE.Mesh).material as THREE.MeshLambertMaterial).name
-          === intersect.object.userData.name,
-    ) as THREE.Mesh;
-    return (buttonMaterial) ? (buttonMaterial.material as THREE.MeshLambertMaterial) : null;
-  };
 
   public setAction = ({
     action: {
@@ -60,16 +32,12 @@ export class SP implements Controller {
     },
   }: paramSetAction) => {
     document.addEventListener('touchstart', (e) => {
-      // from -1 to 1
-      this.vector2.x = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
-      this.vector2.y = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
-      this.raycaster.setFromCamera(this.vector2, this.camera);
-      const intersects = this.raycaster.intersectObjects(this.meshButtons);
-      intersects.forEach((intersect) => {
-        const abm: THREE.MeshLambertMaterial | null = this.activeButtonMaterial(intersect);
-        if (abm === null) { return; }
-        abm.color.set(0x990000);
-        switch (abm.name) {
+      const buttons = this.focussedButtons({
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      });
+      buttons?.forEach((button) => {
+        switch (button) {
           case 'up':
             up();
             break;
@@ -97,16 +65,13 @@ export class SP implements Controller {
     });
     document.addEventListener('touchend', () => {
       // from -1 to 1
-      this.meshButtons.forEach((meshButton) => {
-        ((meshButton as THREE.Mesh).material as THREE.MeshLambertMaterial).color.set(0x999000);
-        offUp();
-        offDown();
-        offLeft();
-        offRight();
-        offSpinRight();
-        offSpinLeft();
-        offEnter();
-      });
+      offUp();
+      offDown();
+      offLeft();
+      offRight();
+      offSpinRight();
+      offSpinLeft();
+      offEnter();
     });
   };
 }

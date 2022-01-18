@@ -24,6 +24,10 @@ export class ThreeJS {
 
   private orbitControls: OrbitControls;
 
+  private raycaster: THREE.Raycaster;
+
+  private vector2: THREE.Vector2;
+
   private textMaterials: THREE.MeshBasicMaterial[] = [];
 
   private counterMaterials: TCounterMaterials = [];
@@ -36,7 +40,7 @@ export class ThreeJS {
 
   private nextTetrominoMaterials: THREE.MeshToonMaterial[] = [];
 
-  private buttonMaterials: THREE.MeshLambertMaterial[] = [];
+  private buttonMaterials: THREE.MeshStandardMaterial[] = [];
 
   private groupTetromino: THREE.Group;
 
@@ -58,6 +62,8 @@ export class ThreeJS {
     scene,
     camera,
     renderer,
+    raycaster,
+    vector2,
     texts,
     counters,
     buttons,
@@ -67,6 +73,8 @@ export class ThreeJS {
     scene: THREE.Scene
     camera: THREE.PerspectiveCamera
     renderer: THREE.WebGLRenderer
+    raycaster: THREE.Raycaster
+    vector2: THREE.Vector2
     texts: TInitTexts
     counters: TInitCounters
     buttons: TInitButtons
@@ -76,6 +84,8 @@ export class ThreeJS {
     this.scene = scene;
     this.camera = camera;
     this.renderer = renderer;
+    this.raycaster = raycaster;
+    this.vector2 = vector2;
     this.texts = texts;
     this.counters = counters;
     this.buttons = buttons;
@@ -107,7 +117,7 @@ export class ThreeJS {
     // カウンターを作る
     this.createCounter();
 
-    // ドラッグできるメッシュを抽出する
+    // ボタンを抽出する
     this.scene.traverse((object: THREE.Object3D<THREE.Event>) => {
       if (object instanceof THREE.Mesh && object.userData.draggable) {
         this.meshObjects.push(object);
@@ -189,16 +199,64 @@ export class ThreeJS {
     });
   };
 
+  private activeButtonMaterials = (
+    intersects: THREE.Intersection<THREE.Object3D<THREE.Event>>[],
+  ): string[] | null => {
+    const result = intersects.reduce((ar: string[], intersect) => {
+      if (!intersect.object.userData.draggable) { return ar; }
+      // TODO: 強引にTHREE.Object3D<THREE.Event>[]
+      // からTHREE.MeshToonMaterialへキャスト
+      const buttonMaterial = this.meshObjects.find(
+        (m) => ((m as THREE.Mesh).material as THREE.MeshLambertMaterial).name
+            === intersect.object.userData.name,
+      ) as THREE.Mesh;
+      if (buttonMaterial) {
+        const { name } = buttonMaterial.material as THREE.MeshLambertMaterial;
+        return [
+          ...ar,
+          name,
+        ];
+      }
+      return ar;
+    }, []);
+    return (result.length === 0) ? null : result;
+  };
+
+  public focussedButtons = ({ x, y }: { x: number, y: number }): string[] | null => {
+    this.vector2.x = (x / window.innerWidth) * 2 - 1;
+    this.vector2.y = -(y / window.innerHeight) * 2 + 1;
+    this.raycaster.setFromCamera(this.vector2, this.camera);
+    const intersects = this.raycaster.intersectObjects(this.meshObjects, true);
+
+    return this.activeButtonMaterials(intersects);
+  };
+
+  public resetColorAllButton = () => {
+    this.buttonMaterials.forEach((buttonMaterial, i) => {
+      this.buttonMaterials[i].color.set(0xfff888);
+    });
+  };
+
+  public setActiveColorButton = (buttonName: string) => {
+    this.buttonMaterials.forEach((buttonMaterial, i) => {
+      if (buttonMaterial.name === buttonName) {
+        this.buttonMaterials[i].color.set(0x990000);
+      }
+    });
+  };
+
   private createButton = () => {
     Object.keys(this.buttons).forEach((button, i) => {
       const {
         x, y, width,
       } = this.buttons[button];
       const geometry = new THREE.SphereGeometry((width / 2), 64, 32);
-      this.buttonMaterials[i] = new THREE.MeshLambertMaterial({
-        color: 0x999000,
+      this.buttonMaterials[i] = new THREE.MeshStandardMaterial({
+        color: 0xfff888,
         name: button,
       });
+      this.buttonMaterials[i].roughness = 0.5;
+      this.buttonMaterials[i].metalness = 1;
       const sphereMesh = new THREE.Mesh(geometry, this.buttonMaterials[i]);
       sphereMesh.position.set(x, y, 0);
       this.scene.add(sphereMesh);

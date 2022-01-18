@@ -30,7 +30,11 @@ namespace Presenters {
       - tetrominos: TInitTetrominos;
       - nextTetrominos: TInitTetrominos;
       - buttons: TInitButtons;
-      - meshObjects: THREE.Object3D<THREE.Event>[] = [];
+      - meshObjects: THREE.Object3D<THREE.Event>[] = []
+      - activeButtonMaterials: () => string[] | null
+      + focussedButtons(): TFocussedButtons
+      + resetColorAllButton(): void
+      + setActiveColorButton(): void
       - createText(): void
       - createCounter(): void
       - createButton(): void
@@ -283,21 +287,11 @@ namespace Controllers {
 
   namespace ThreeJS {
     class PC {
-      - raycaster: THREE.Raycaster;
-      - vector2: THREE.Vector2;
-      - camera: THREE.PerspectiveCamera;
-      - meshButtons: THREE.Object3D[];
-      - onButtonMaterial(): void
-      - offButtonMaterial(): void
-      - activeButtonMaterial(): void
+      - focussedButtons: TFocussedButtons
       + setAction(): void
     }
     class SP {
-      - raycaster: THREE.Raycaster;
-      - vector2: THREE.Vector2;
-      - camera: THREE.PerspectiveCamera;
-      - meshButtons: THREE.Object3D[];
-      - activeButtonMaterial(): void
+      - focussedButtons: TFocussedButtons
       + setAction(): void
     }
   }
