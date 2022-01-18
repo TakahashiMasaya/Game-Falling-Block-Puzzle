@@ -332,8 +332,8 @@ export class SceneChangerThreeJS {
     });
 
     // 平行光源を生成
-    const light = new THREE.DirectionalLight(0x666666);
-    light.position.set(0, -200, 5000);
+    const light = new THREE.DirectionalLight(0x888888);
+    light.position.set(0, 0, 500000);
     scene.add(light);
 
     // シーンを準備する

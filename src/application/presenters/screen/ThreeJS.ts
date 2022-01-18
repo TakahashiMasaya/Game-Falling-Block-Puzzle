@@ -32,13 +32,13 @@ export class ThreeJS {
 
   private counterMaterials: TCounterMaterials = [];
 
-  private tetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshToonMaterial>[] = [];
+  private tetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>[] = [];
 
-  private tetrominoMaterials: THREE.MeshToonMaterial[] = [];
+  private tetrominoMaterials: THREE.MeshStandardMaterial[] = [];
 
-  private nextTetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshToonMaterial>[] = [];
+  private nextTetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>[] = [];
 
-  private nextTetrominoMaterials: THREE.MeshToonMaterial[] = [];
+  private nextTetrominoMaterials: THREE.MeshStandardMaterial[] = [];
 
   private buttonMaterials: THREE.MeshStandardMaterial[] = [];
 
@@ -256,7 +256,7 @@ export class ThreeJS {
         name: button,
       });
       this.buttonMaterials[i].roughness = 0.5;
-      this.buttonMaterials[i].metalness = 1;
+      this.buttonMaterials[i].metalness = 0.7;
       const sphereMesh = new THREE.Mesh(geometry, this.buttonMaterials[i]);
       sphereMesh.position.set(x, y, 0);
       this.scene.add(sphereMesh);
@@ -274,11 +274,13 @@ export class ThreeJS {
       } = tetromino;
       // 箱を作成
       const geometry = new THREE.BoxGeometry(size, size, size);
-      this.tetrominoMaterials[i] = new THREE.MeshToonMaterial({
+      this.tetrominoMaterials[i] = new THREE.MeshStandardMaterial({
         color,
         transparent: true,
       });
       this.tetrominoMaterials[i].opacity = opacity;
+      this.tetrominoMaterials[i].roughness = 0.5;
+      this.tetrominoMaterials[i].metalness = 0.9;
       this.tetrominosMesh[i] = new THREE.Mesh(geometry, this.tetrominoMaterials[i]);
 
       // 配置座標を計算
@@ -300,11 +302,13 @@ export class ThreeJS {
       } = tetromino;
       // 箱を作成
       const geometry = new THREE.BoxGeometry(size, size, size);
-      this.nextTetrominoMaterials[i] = new THREE.MeshToonMaterial({
+      this.nextTetrominoMaterials[i] = new THREE.MeshStandardMaterial({
         color,
         transparent: true,
       });
       this.nextTetrominoMaterials[i].opacity = opacity;
+      this.nextTetrominoMaterials[i].roughness = 0.5;
+      this.nextTetrominoMaterials[i].metalness = 0.9;
       this.nextTetrominosMesh[i] = new THREE.Mesh(geometry, this.nextTetrominoMaterials[i]);
 
       // 配置座標を計算
