@@ -50,6 +50,7 @@ export class SceneChangerThreeJS {
     // create scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0f2350);
+    scene.position.set(-150, 250, 0);
 
     // create renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
