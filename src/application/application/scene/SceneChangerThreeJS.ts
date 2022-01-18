@@ -50,7 +50,7 @@ export class SceneChangerThreeJS {
     // create scene
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0f2350);
-    scene.position.set(-150, 250, 0);
+    scene.position.set(-180, 250, -170);
 
     // create renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -299,7 +299,7 @@ export class SceneChangerThreeJS {
 
     // 平行光源を生成
     const light = new THREE.DirectionalLight(0x666666);
-    light.position.set(1, 500, 1000);
+    light.position.set(0, -200, 5000);
     scene.add(light);
 
     // シーンを準備する
