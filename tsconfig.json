@@ -4,15 +4,15 @@
     "sourceMap": true,
     "outDir": "./dist",
     "strict": true,
-    // TSはECMAScript 5に変換
-    "target": "ES5",
+    // TSはECMAScript 6に変換
+    "target": "es6",
     // TSのモジュールはES Modulesとして出力
-    "module": "ES2015",
+    "module": "ES2020",
     // JSXの書式を有効に設定
     "jsx": "react",
     "moduleResolution": "node",
     "lib": [
-      "ES2020",
+      "es6",
       "DOM"
     ],
     "baseUrl": "./src/",

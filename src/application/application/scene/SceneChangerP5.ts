@@ -2,7 +2,9 @@
 /* eslint-disable new-cap */
 /* eslint-disable no-param-reassign */
 import p5 from 'p5';
-import { Scene, Image, Text } from '@/type/Scene';
+import {
+  Scene, Image, Text, TextInPlaying,
+} from '@/type/Scene';
 import { paramSetAction, TBtPositions, TBtIndex } from '@/type/Controllers';
 import { InteractiveController } from '@/application/interactor/InteractiveController';
 import { TransferredScreen } from '@/application/application/TransferredScreen';
@@ -130,51 +132,143 @@ export class SceneChangerP5 {
       p.fill(255);
       s.move();
 
-      s.draw().forEach((v: any) => {
+      const tetrominoSize = 18;
+      const textSize = 30;
+      s.draw().forEach((v: Text | TextInPlaying | Image) => {
         const { type } = v;
         switch (type) {
           case 'text': {
-            const {
-              width, height, position, value, fill,
-            }: Text = v;
-            const pos = (typeof position === 'string') ? {
+            const { value }: Text = v;
+            const pos = {
               x: 400 / 2,
-              y: (600 / 2) - (height / 2),
-              width,
-              height,
-            } : position;
-
+              y: (600 / 2) - (textSize / 2),
+              width: textSize,
+              height: textSize,
+            };
             const {
               x: tx, y: ty, width: tw,
             } = this.transferredScreen?.transfer({
-              x: pos.x, y: pos.y, width, height,
+              x: pos.x, y: pos.y, width: textSize, height: textSize,
             }) || {
               x: 0, y: 0, width: 0, height: 0,
             };
             p.textAlign('center');
             p.textSize(tw);
-            if ((fill ?? true) !== true) p.fill(fill as any);
-            p.text(value as any, tx, ty);
+            p.fill(255);
+            p.text(value as string, tx, ty);
             break;
           }
-          case 'image': {
+          case 'textNextInPlaying': {
+            const { value }: TextInPlaying = v;
             const {
-              position, width, height, stroke, fill,
+              x: tx, y: ty, width: tw,
+            } = this.transferredScreen?.transfer({
+              x: 330, y: 100, width: textSize, height: textSize,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
+            p.textSize(tw);
+            p.fill(255);
+            p.text(value as string, tx, ty);
+            break;
+          }
+          case 'textScoreInPlaying': {
+            const { value }: TextInPlaying = v;
+            const {
+              x: tx, y: ty, width: tw,
+            } = this.transferredScreen?.transfer({
+              x: 330, y: 250, width: textSize, height: textSize,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
+            p.textSize(tw);
+            p.fill(255);
+            p.text(value as string, tx, ty);
+            break;
+          }
+          case 'textScoreValueInPlaying': {
+            const { value }: TextInPlaying = v;
+            const {
+              x: tx, y: ty, width: tw,
+            } = this.transferredScreen?.transfer({
+              x: 330, y: 280, width: textSize, height: textSize,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
+            p.textSize(tw);
+            p.fill(255);
+            p.text(value as string, tx, ty);
+            break;
+          }
+          case 'textLinesInPlaying': {
+            const { value }: TextInPlaying = v;
+            const {
+              x: tx, y: ty, width: tw,
+            } = this.transferredScreen?.transfer({
+              x: 330, y: 350, width: textSize, height: textSize,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
+            p.textSize(tw);
+            p.fill(255);
+            p.text(value as string, tx, ty);
+            break;
+          }
+          case 'textLinesValueInPlaying': {
+            const { value }: TextInPlaying = v;
+            const {
+              x: tx, y: ty, width: tw,
+            } = this.transferredScreen?.transfer({
+              x: 330, y: 380, width: textSize, height: textSize,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
+            p.textSize(tw);
+            p.fill(255);
+            p.text(value as string, tx, ty);
+            break;
+          }
+          case 'tetrominos':
+          case 'activeTetromino': {
+            const {
+              position, fill,
             }: Image = v;
-            if (typeof position === 'string') {
-              return;
-            }
             const {
               x, y,
             } = position;
             const {
               x: tx, y: ty, width: tw, height: th,
             } = this.transferredScreen?.transfer({
-              x, y, width, height,
+              x: x * tetrominoSize + 30,
+              y: y * tetrominoSize + 50,
+              width: tetrominoSize,
+              height: tetrominoSize,
             }) || {
               x: 0, y: 0, width: 0, height: 0,
             };
-            if ((stroke ?? true) !== true) p.stroke(stroke?.toString() || '');
+            p.stroke('0');
+            if ((fill ?? true) !== true) p.fill(fill?.toString() || '');
+            p.rect(tx, ty, tw, th);
+            break;
+          }
+          case 'nextTetromino': {
+            const {
+              position, fill,
+            }: Image = v;
+            const {
+              x, y,
+            } = position;
+            const {
+              x: tx, y: ty, width: tw, height: th,
+            } = this.transferredScreen?.transfer({
+              x: x * tetrominoSize + 300,
+              y: y * tetrominoSize + 120,
+              width: tetrominoSize,
+              height: tetrominoSize,
+            }) || {
+              x: 0, y: 0, width: 0, height: 0,
+            };
+            p.stroke('0');
             if ((fill ?? true) !== true) p.fill(fill?.toString() || '');
             p.rect(tx, ty, tw, th);
             break;

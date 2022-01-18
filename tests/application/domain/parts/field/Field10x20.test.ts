@@ -362,17 +362,4 @@ describe('Field', () => {
       expect(f.getRemoveRows()).toEqual(4);
     });
   });
-
-  describe('文字列置換処理', () => {
-    it('文字列が所定位置で置換できること', () => {
-      const f = new Field10x20();
-      const str = (f as any).replaceBitString('00000000', '1111', 3);
-      expect(str).toEqual('00011110');
-    });
-    it('文字列が所定位置で置換できること', () => {
-      const f = new Field10x20();
-      const str = (f as any).replaceBitString('00000000', '1111', 7);
-      expect(str).toEqual('00000001');
-    });
-  });
 });

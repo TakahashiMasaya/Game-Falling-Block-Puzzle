@@ -5,11 +5,11 @@ export class Score implements ScoreInterface {
 
   public add = (num: number) => {
     this.score += num;
-  }
+  };
 
-  public get = () => this.score
+  public get = () => this.score;
 
   public reset = (): void => {
     this.score = 0;
-  }
+  };
 }

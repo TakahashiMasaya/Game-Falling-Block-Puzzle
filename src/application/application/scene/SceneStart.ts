@@ -1,27 +1,22 @@
 import { paramScene } from '@/type/Application';
 import { TransferredController } from '@/application/application/TransferredController';
-import { InteractivePresenter } from '@/application/interactor/InteractivePresenter';
 
-import { Scene, Text, Image } from '@/type/Scene';
+import { Scene, Text } from '@/type/Scene';
 
 export class SceneStart implements Scene {
   private transferredController : TransferredController;
 
-  private interactivePresenter?: InteractivePresenter;
-
   private end: boolean = false;
 
-  private drawing: (Text | Image)[] = [];
+  private drawing: Text[] = [];
 
   constructor({
     transferredController,
-    interactivePresenter,
   }: paramScene) {
     this.transferredController = transferredController;
-    this.interactivePresenter = interactivePresenter;
   }
 
-  public start = () => {}
+  public start = () => {};
 
   public move = () => {
     this.transferredController.transfer();
@@ -35,12 +30,9 @@ export class SceneStart implements Scene {
     this.end = false;
     this.drawing = [{
       type: 'text',
-      position: 'center',
       value: 'Press ■ button',
-      width: 30,
-      height: 30,
     }];
-  }
+  };
 
   public draw = () => this.drawing;
 
