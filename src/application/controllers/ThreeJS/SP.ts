@@ -95,40 +95,17 @@ export class SP implements Controller {
         }
       });
     });
-    document.addEventListener('touchend', (e) => {
+    document.addEventListener('touchend', () => {
       // from -1 to 1
-      this.vector2.x = (e.changedTouches[0].clientX / window.innerWidth) * 2 - 1;
-      this.vector2.y = -(e.changedTouches[0].clientY / window.innerHeight) * 2 + 1;
-      this.raycaster.setFromCamera(this.vector2, this.camera);
-      const intersects = this.raycaster.intersectObjects(this.meshButtons);
-      intersects.forEach((intersect) => {
-        const abm: THREE.MeshLambertMaterial | null = this.activeButtonMaterial(intersect);
-        if (abm === null) { return; }
-        abm.color.set(0x999000);
-        switch (abm.name) {
-          case 'up':
-            offUp();
-            break;
-          case 'down':
-            offDown();
-            break;
-          case 'left':
-            offLeft();
-            break;
-          case 'right':
-            offRight();
-            break;
-          case 'spinRight':
-            offSpinRight();
-            break;
-          case 'spinLeft':
-            offSpinLeft();
-            break;
-          case 'enter':
-            offEnter();
-            break;
-          default:
-        }
+      this.meshButtons.forEach((meshButton) => {
+        ((meshButton as THREE.Mesh).material as THREE.MeshLambertMaterial).color.set(0x999000);
+        offUp();
+        offDown();
+        offLeft();
+        offRight();
+        offSpinRight();
+        offSpinLeft();
+        offEnter();
       });
     });
   };
