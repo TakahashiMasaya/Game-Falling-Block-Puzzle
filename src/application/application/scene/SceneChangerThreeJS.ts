@@ -6,6 +6,7 @@ import { PC } from '@/application/controllers/ThreeJS/PC';
 import { SP } from '@/application/controllers/ThreeJS/SP';
 import { paramSetAction } from '@/type/Controllers';
 import { TRenderingTetromino } from '@/type/Presenters';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ScenePlaying } from './ScenePlaying';
 import { SceneStart } from './SceneStart';
 import { SceneGameover } from './SceneGameover';
@@ -36,6 +37,8 @@ export class SceneChangerThreeJS {
 
   // Enterキーの長押しカウント
   private pressingEnterKeyCount: number = 0;
+
+  private orbitControls: OrbitControls;
 
   constructor({
     list,
@@ -308,14 +311,6 @@ export class SceneChangerThreeJS {
       },
     });
 
-    // ボタン(メッシュ)を抽出する
-    const meshButtons: THREE.Object3D<THREE.Event>[] = [];
-    scene.traverse((object: THREE.Object3D<THREE.Event>) => {
-      if (object instanceof THREE.Mesh && object.userData.draggable) {
-        meshButtons.push(object);
-      }
-    });
-
     // 入力デバイスを設定する
     // PCはキーボードとマウスで操作させる
     const pc = new PC({
@@ -333,8 +328,12 @@ export class SceneChangerThreeJS {
 
     // 平行光源を生成
     const light = new THREE.DirectionalLight(0x888888);
-    light.position.set(0, 0, 500000);
+    light.position.set(0, -300, 500000);
     scene.add(light);
+
+    this.orbitControls = new OrbitControls(camera, renderer.domElement);
+    this.orbitControls.minDistance = 1;
+    this.orbitControls.maxDistance = 10000;
 
     // シーンを準備する
     this.sl = this.sceneList();
@@ -448,6 +447,8 @@ export class SceneChangerThreeJS {
       window.cancelAnimationFrame(this.animationID);
       this.start();
     }
+
+    this.orbitControls.update();
   };
 
   /**

@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { Color, Mesh } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import {
@@ -21,8 +20,6 @@ export class ThreeJS {
   private camera: THREE.PerspectiveCamera;
 
   private renderer: THREE.WebGLRenderer;
-
-  private orbitControls: OrbitControls;
 
   private raycaster: THREE.Raycaster;
 
@@ -123,15 +120,6 @@ export class ThreeJS {
         this.meshObjects.push(object);
       }
     });
-
-    // 平行光源を生成
-    const light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(0, 100, 30);
-    this.scene.add(light);
-
-    this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.orbitControls.minDistance = 1;
-    this.orbitControls.maxDistance = 10000;
   }
 
   private createText = () => {
@@ -145,9 +133,7 @@ export class ThreeJS {
           size,
           height: 3,
           font,
-          curveSegments: 5,
-          bevelSize: 1,
-          bevelEnabled: true,
+          curveSegments: 10,
         });
         this.textMaterials[i] = new THREE.MeshPhongMaterial();
         this.textMaterials[i].name = name;
@@ -219,7 +205,8 @@ export class ThreeJS {
       }
       return ar;
     }, []);
-    return (result.length === 0) ? null : result;
+    // 複数検知された場合は、先頭要素（手前）を返す
+    return (result.length === 0) ? null : [result[0]];
   };
 
   public focussedButtons = ({ x, y }: { x: number, y: number }): string[] | null => {
@@ -434,9 +421,6 @@ export class ThreeJS {
   };
 
   public render = () => {
-    this.orbitControls.update();
-
-    // 描画
     this.renderer.render(this.scene, this.camera);
   };
 }
