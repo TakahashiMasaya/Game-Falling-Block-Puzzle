@@ -106,8 +106,8 @@ export class P5 {
       } = _p[button as keyof TBtPositions];
       const bt = this.buttons[button as keyof Buttons];
       bt.position(x, y);
-      bt.style('width', width);
-      bt.style('height', height);
+      bt.style('width', width.toString());
+      bt.style('height', height.toString());
       bt.style('border-width', `${Math.trunc(width / 10)}px`);
     });
   };
