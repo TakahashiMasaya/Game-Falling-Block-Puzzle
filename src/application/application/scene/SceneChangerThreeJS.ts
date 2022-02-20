@@ -6,6 +6,7 @@ import { PC } from '@/application/controllers/ThreeJS/PC';
 import { SP } from '@/application/controllers/ThreeJS/SP';
 import { paramSetAction } from '@/type/Controllers';
 import { TRenderingTetromino } from '@/type/Presenters';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { ScenePlaying } from './ScenePlaying';
 import { SceneStart } from './SceneStart';
 import { SceneGameover } from './SceneGameover';
@@ -36,6 +37,8 @@ export class SceneChangerThreeJS {
 
   // Enterキーの長押しカウント
   private pressingEnterKeyCount: number = 0;
+
+  private orbitControls: OrbitControls;
 
   constructor({
     list,
@@ -72,13 +75,32 @@ export class SceneChangerThreeJS {
 
     const action: paramSetAction = {
       action: {
-        up: this.interactiveController.up,
-        down: this.interactiveController.down,
-        left: this.interactiveController.left,
-        right: this.interactiveController.right,
-        spinRight: this.interactiveController.spinRight,
-        spinLeft: this.interactiveController.spinLeft,
+        up: () => {
+          this.interactiveController.up();
+          this.threeJS.setActiveColorButton('up');
+        },
+        down: () => {
+          this.interactiveController.down();
+          this.threeJS.setActiveColorButton('down');
+        },
+        left: () => {
+          this.interactiveController.left();
+          this.threeJS.setActiveColorButton('left');
+        },
+        right: () => {
+          this.interactiveController.right();
+          this.threeJS.setActiveColorButton('right');
+        },
+        spinRight: () => {
+          this.interactiveController.spinRight();
+          this.threeJS.setActiveColorButton('spinRight');
+        },
+        spinLeft: () => {
+          this.interactiveController.spinLeft();
+          this.threeJS.setActiveColorButton('spinLeft');
+        },
         enter: () => {
+          this.threeJS.setActiveColorButton('enter');
           if (this.pressingEnterKeyCount !== 0) { return; }
           this.interactiveController.enter();
           if (this.s.constructor === ScenePlaying) {
@@ -90,15 +112,34 @@ export class SceneChangerThreeJS {
             ? 100
             : this.pressingEnterKeyCount += 1;
         },
-        offUp: this.interactiveController.offUp,
-        offDown: this.interactiveController.offDown,
-        offLeft: this.interactiveController.offLeft,
-        offRight: this.interactiveController.offRight,
-        offSpinRight: this.interactiveController.offSpinRight,
-        offSpinLeft: this.interactiveController.offSpinLeft,
+        offUp: () => {
+          this.interactiveController.offUp();
+          this.threeJS.resetColorAllButton();
+        },
+        offDown: () => {
+          this.interactiveController.offDown();
+          this.threeJS.resetColorAllButton();
+        },
+        offLeft: () => {
+          this.interactiveController.offLeft();
+          this.threeJS.resetColorAllButton();
+        },
+        offRight: () => {
+          this.interactiveController.offRight();
+          this.threeJS.resetColorAllButton();
+        },
+        offSpinRight: () => {
+          this.interactiveController.offSpinRight();
+          this.threeJS.resetColorAllButton();
+        },
+        offSpinLeft: () => {
+          this.interactiveController.offSpinLeft();
+          this.threeJS.resetColorAllButton();
+        },
         offEnter: () => {
           this.pressingEnterKeyCount = 0;
           this.interactiveController.offEnter();
+          this.threeJS.resetColorAllButton();
         },
       },
     };
@@ -110,6 +151,8 @@ export class SceneChangerThreeJS {
       scene,
       camera,
       renderer,
+      raycaster,
+      vector2,
       texts: [
         {
           name: 'start',
@@ -268,39 +311,29 @@ export class SceneChangerThreeJS {
       },
     });
 
-    // ボタン(メッシュ)を抽出する
-    const meshButtons: THREE.Object3D<THREE.Event>[] = [];
-    scene.traverse((object: THREE.Object3D<THREE.Event>) => {
-      if (object instanceof THREE.Mesh && object.userData.draggable) {
-        meshButtons.push(object);
-      }
-    });
-
     // 入力デバイスを設定する
     // PCはキーボードとマウスで操作させる
     const pc = new PC({
-      raycaster,
-      vector2,
-      camera,
-      meshButtons,
+      focussedButtons: this.threeJS.focussedButtons,
     });
     pc.setAction({
       ...action,
     });
     const sp = new SP({
-      raycaster,
-      vector2,
-      camera,
-      meshButtons,
+      focussedButtons: this.threeJS.focussedButtons,
     });
     sp.setAction({
       ...action,
     });
 
     // 平行光源を生成
-    const light = new THREE.DirectionalLight(0x666666);
-    light.position.set(0, -200, 5000);
+    const light = new THREE.DirectionalLight(0x888888);
+    light.position.set(0, -300, 500000);
     scene.add(light);
+
+    this.orbitControls = new OrbitControls(camera, renderer.domElement);
+    this.orbitControls.minDistance = 1;
+    this.orbitControls.maxDistance = 10000;
 
     // シーンを準備する
     this.sl = this.sceneList();
@@ -414,6 +447,8 @@ export class SceneChangerThreeJS {
       window.cancelAnimationFrame(this.animationID);
       this.start();
     }
+
+    this.orbitControls.update();
   };
 
   /**

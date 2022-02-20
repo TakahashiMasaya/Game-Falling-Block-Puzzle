@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { Color, Mesh } from 'three';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import {
@@ -22,21 +21,23 @@ export class ThreeJS {
 
   private renderer: THREE.WebGLRenderer;
 
-  private orbitControls: OrbitControls;
+  private raycaster: THREE.Raycaster;
+
+  private vector2: THREE.Vector2;
 
   private textMaterials: THREE.MeshBasicMaterial[] = [];
 
   private counterMaterials: TCounterMaterials = [];
 
-  private tetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshToonMaterial>[] = [];
+  private tetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>[] = [];
 
-  private tetrominoMaterials: THREE.MeshToonMaterial[] = [];
+  private tetrominoMaterials: THREE.MeshStandardMaterial[] = [];
 
-  private nextTetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshToonMaterial>[] = [];
+  private nextTetrominosMesh: Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>[] = [];
 
-  private nextTetrominoMaterials: THREE.MeshToonMaterial[] = [];
+  private nextTetrominoMaterials: THREE.MeshStandardMaterial[] = [];
 
-  private buttonMaterials: THREE.MeshLambertMaterial[] = [];
+  private buttonMaterials: THREE.MeshStandardMaterial[] = [];
 
   private groupTetromino: THREE.Group;
 
@@ -58,6 +59,8 @@ export class ThreeJS {
     scene,
     camera,
     renderer,
+    raycaster,
+    vector2,
     texts,
     counters,
     buttons,
@@ -67,6 +70,8 @@ export class ThreeJS {
     scene: THREE.Scene
     camera: THREE.PerspectiveCamera
     renderer: THREE.WebGLRenderer
+    raycaster: THREE.Raycaster
+    vector2: THREE.Vector2
     texts: TInitTexts
     counters: TInitCounters
     buttons: TInitButtons
@@ -76,6 +81,8 @@ export class ThreeJS {
     this.scene = scene;
     this.camera = camera;
     this.renderer = renderer;
+    this.raycaster = raycaster;
+    this.vector2 = vector2;
     this.texts = texts;
     this.counters = counters;
     this.buttons = buttons;
@@ -107,21 +114,12 @@ export class ThreeJS {
     // カウンターを作る
     this.createCounter();
 
-    // ドラッグできるメッシュを抽出する
+    // ボタンを抽出する
     this.scene.traverse((object: THREE.Object3D<THREE.Event>) => {
       if (object instanceof THREE.Mesh && object.userData.draggable) {
         this.meshObjects.push(object);
       }
     });
-
-    // 平行光源を生成
-    const light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(0, 100, 30);
-    this.scene.add(light);
-
-    this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.orbitControls.minDistance = 1;
-    this.orbitControls.maxDistance = 10000;
   }
 
   private createText = () => {
@@ -135,9 +133,7 @@ export class ThreeJS {
           size,
           height: 3,
           font,
-          curveSegments: 5,
-          bevelSize: 1,
-          bevelEnabled: true,
+          curveSegments: 10,
         });
         this.textMaterials[i] = new THREE.MeshPhongMaterial();
         this.textMaterials[i].name = name;
@@ -189,16 +185,65 @@ export class ThreeJS {
     });
   };
 
+  private activeButtonMaterials = (
+    intersects: THREE.Intersection<THREE.Object3D<THREE.Event>>[],
+  ): string[] | null => {
+    const result = intersects.reduce((ar: string[], intersect) => {
+      if (!intersect.object.userData.draggable) { return ar; }
+      // TODO: 強引にTHREE.Object3D<THREE.Event>[]
+      // からTHREE.MeshToonMaterialへキャスト
+      const buttonMaterial = this.meshObjects.find(
+        (m) => ((m as THREE.Mesh).material as THREE.MeshLambertMaterial).name
+            === intersect.object.userData.name,
+      ) as THREE.Mesh;
+      if (buttonMaterial) {
+        const { name } = buttonMaterial.material as THREE.MeshLambertMaterial;
+        return [
+          ...ar,
+          name,
+        ];
+      }
+      return ar;
+    }, []);
+    // 複数検知された場合は、先頭要素（手前）を返す
+    return (result.length === 0) ? null : [result[0]];
+  };
+
+  public focussedButtons = ({ x, y }: { x: number, y: number }): string[] | null => {
+    this.vector2.x = (x / window.innerWidth) * 2 - 1;
+    this.vector2.y = -(y / window.innerHeight) * 2 + 1;
+    this.raycaster.setFromCamera(this.vector2, this.camera);
+    const intersects = this.raycaster.intersectObjects(this.meshObjects, true);
+
+    return this.activeButtonMaterials(intersects);
+  };
+
+  public resetColorAllButton = () => {
+    this.buttonMaterials.forEach((buttonMaterial, i) => {
+      this.buttonMaterials[i].color.set(0xfff888);
+    });
+  };
+
+  public setActiveColorButton = (buttonName: string) => {
+    this.buttonMaterials.forEach((buttonMaterial, i) => {
+      if (buttonMaterial.name === buttonName) {
+        this.buttonMaterials[i].color.set(0x990000);
+      }
+    });
+  };
+
   private createButton = () => {
     Object.keys(this.buttons).forEach((button, i) => {
       const {
         x, y, width,
       } = this.buttons[button];
       const geometry = new THREE.SphereGeometry((width / 2), 64, 32);
-      this.buttonMaterials[i] = new THREE.MeshLambertMaterial({
-        color: 0x999000,
+      this.buttonMaterials[i] = new THREE.MeshStandardMaterial({
+        color: 0xfff888,
         name: button,
       });
+      this.buttonMaterials[i].roughness = 0.5;
+      this.buttonMaterials[i].metalness = 0.7;
       const sphereMesh = new THREE.Mesh(geometry, this.buttonMaterials[i]);
       sphereMesh.position.set(x, y, 0);
       this.scene.add(sphereMesh);
@@ -216,11 +261,13 @@ export class ThreeJS {
       } = tetromino;
       // 箱を作成
       const geometry = new THREE.BoxGeometry(size, size, size);
-      this.tetrominoMaterials[i] = new THREE.MeshToonMaterial({
+      this.tetrominoMaterials[i] = new THREE.MeshStandardMaterial({
         color,
         transparent: true,
       });
       this.tetrominoMaterials[i].opacity = opacity;
+      this.tetrominoMaterials[i].roughness = 0.5;
+      this.tetrominoMaterials[i].metalness = 0.9;
       this.tetrominosMesh[i] = new THREE.Mesh(geometry, this.tetrominoMaterials[i]);
 
       // 配置座標を計算
@@ -242,11 +289,13 @@ export class ThreeJS {
       } = tetromino;
       // 箱を作成
       const geometry = new THREE.BoxGeometry(size, size, size);
-      this.nextTetrominoMaterials[i] = new THREE.MeshToonMaterial({
+      this.nextTetrominoMaterials[i] = new THREE.MeshStandardMaterial({
         color,
         transparent: true,
       });
       this.nextTetrominoMaterials[i].opacity = opacity;
+      this.nextTetrominoMaterials[i].roughness = 0.5;
+      this.nextTetrominoMaterials[i].metalness = 0.9;
       this.nextTetrominosMesh[i] = new THREE.Mesh(geometry, this.nextTetrominoMaterials[i]);
 
       // 配置座標を計算
@@ -372,9 +421,6 @@ export class ThreeJS {
   };
 
   public render = () => {
-    this.orbitControls.update();
-
-    // 描画
     this.renderer.render(this.scene, this.camera);
   };
 }

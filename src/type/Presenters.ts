@@ -78,3 +78,8 @@ export type TRenderingCounter = {
   name: string,
   value: string,
 }
+
+export type TFocussedButtons = ({ x, y }: {
+  x: number
+  y: number
+}) => string[] | null;
